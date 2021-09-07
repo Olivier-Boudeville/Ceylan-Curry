@@ -161,3 +161,8 @@ HASKELL_COMPILER_OPT := -dynamic
 
 
 # Documentation section.
+
+# PROJECT_ICON is a path to an icon file that will be copied on HTML generation:
+ifdef PROJECT_ICON
+	PROJECT_ICON_OPT := --icon-file $(PROJECT_ICON)
+endif

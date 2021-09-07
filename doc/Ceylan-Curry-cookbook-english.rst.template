@@ -1,0 +1,114 @@
+.. _Top:
+
+
+.. title:: Welcome to the Ceylan-Curry Haskell Cookbook
+
+.. comment stylesheet specified through GNUmakefile
+
+
+--------------------------------
+Ceylan-Curry, a Haskell Cookbook
+--------------------------------
+
+
+.. role:: raw-html(raw)
+   :format: html
+
+.. role:: raw-latex(raw)
+   :format: latex
+
+
+:raw-html:`<a name="curry_top"></a>`
+
+:raw-html:`<div class="banner"><p><em>Curry Cookbook</em> <a href="http://curry.esperide.org">browse latest</a> <a href="https://olivier-boudeville.github.io/Ceylan-Curry/index.html">browse mirror</a> <a href="Ceylan-Curry-cookbook-english.pdf">get PDF</a> <a href="#curry_top">go to top</a> <a href="#curry_toc">go to toc</a> <a href="#curry_bottom">go to bottom</a> <a href="https://github.com/Olivier-Boudeville/Ceylan-Curry">go to project</a> <a href="mailto:about(dash)curry(at)esperide(dot)com?subject=[Ceylan-Curry]%20Remark">email us</a></p></div>`
+
+
+:raw-html:`<center><img src="curry-title.png" id="responsive-image-small"></img>`
+:raw-latex:`\centering \includegraphics[scale=0.70]{curry-title.png}`
+
+
+
+:Organisation: Copyright (C) 2021-GENERATION_YEAR_TAG Olivier Boudeville
+:Contact: about (dash) curry (at) esperide (dot) com
+:Creation date: Tuesday, September 7, 2021
+:Lastly updated: GENERATION_DATE_TAG
+:Version: PROJECT_VERSION_TAG
+:Status: Work in progress
+:Dedication: Anyone wanting to discover the Haskell programming language.
+:Abstract:
+	The purpose of this `Curry <http://curry.esperide.org/>`_ cookbook is to help newcomers getting up to speed with functional programming as done based on the `Haskell <https://www.haskell.org/>`_ language.
+
+
+.. meta::
+   :keywords: Curry, Haskell, program, functional programming
+
+:raw-html:`</center>`
+
+
+The latest version of this documentation is to be found at the `official Curry website <http://curry.esperide.org>`_ (``http://curry.esperide.org``).
+
+:raw-html:`This Curry documentation is also available in the PDF format, see <a href="Ceylan-Curry-cookbook-english.pdf">Ceylan-Curry-cookbook-english.pdf</a>.`
+
+
+
+
+
+:raw-latex:`\pagebreak`
+
+:raw-html:`<a name="curry_toc"></a>`
+
+.. _`table of contents`:
+
+
+.. contents:: **Table of Contents**
+  :depth: 3
+
+
+:raw-latex:`\pagebreak`
+
+
+Overview
+========
+
+The purpose of this `Curry <http://curry.esperide.org/>`_ cookbook is to help newcomers getting up to speed with functional programming when relying on the `Haskell <https://www.haskell.org/>`_ language [#]_ for that.
+
+.. [#] This cookbook is in some way a Haskell counterpart of what we did for Erlang, with the software stack whose first layer is `Ceylan-Myriad <https://myriad.esperide.org>`_.
+
+More precisely, this cookbook is to summarise the various elements that we found useful to remember when wanting to program in Haskell whereas either one never really practiced that art or already forgot essential elements of it.
+
+So the goal of Curry is to be quicker to read/browse than it would be to start the learning again from scratch and never reaching the latter parts thereof (knowing that the learning curve of Haskell is unfortunately rather steep).
+
+
+
+Teaching Resources
+==================
+
+We would certainly recommend browsing the pleasant `Learn You a Haskell for Great Good! <http://learnyouahaskell.com/>`_ website or, even better, buying their book; another worthwhile book is *Programming in Haskell*, whose author is Graham Hutton, that we found interesting and well-written as well.
+
+Of course the `official Haskell website <https://www.haskell.org/>`_ is also of interest.
+
+
+
+Support
+=======
+
+Bugs, questions, remarks, patches, requests for enhancements, etc. are to be reported to the `project interface <https://github.com/Olivier-Boudeville/Ceylan-Curry>`_ (typically `issues <https://github.com/Olivier-Boudeville/Ceylan-Curry/issues>`_) or directly at the email address mentioned at the beginning of this cookbook.
+
+
+
+Please React!
+=============
+
+If you have information more detailed or more recent than those presented in this document, if you noticed errors, neglects or points insufficiently discussed, drop us a line! (for that, follow the Support_ guidelines).
+
+
+
+Ending Word
+===========
+
+Have fun with Ceylan-Curry!
+
+:raw-html:`<center><img src="curry-title.png" id="responsive-image-small"></img></center>`
+:raw-latex:`\begin{figure}[h] \centering \includegraphics[scale=0.2]{curry-title.png} \end{figure}`
+
+:raw-html:`<a name="curry_bottom"></a>`
