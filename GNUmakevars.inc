@@ -118,6 +118,15 @@ space :=
 space +=
 
 
+
+# The number of available cores on this computer:
+#
+# (set it to 1 in order to restore a sequential build)
+#
+CORE_COUNT := $$(grep -c processor /proc/cpuinfo)
+#CORE_COUNT := 1
+
+
 ARCHIVE_ROOT := $$HOME/Archives/$(PROJECT_NAME)
 
 

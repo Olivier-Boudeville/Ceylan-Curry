@@ -32,7 +32,6 @@ help-curry:
 
 all:
 
-clean:
 
 # Typically useful to know the software context for continuous integration:
 info: info-versions info-tools
