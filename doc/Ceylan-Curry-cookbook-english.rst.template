@@ -6,9 +6,9 @@
 .. comment stylesheet specified through GNUmakefile
 
 
---------------------------------
+================================
 Ceylan-Curry, a Haskell Cookbook
---------------------------------
+================================
 
 
 .. role:: raw-html(raw)
@@ -67,8 +67,9 @@ The latest version of this documentation is to be found at the `official Curry w
 :raw-latex:`\pagebreak`
 
 
+--------
 Overview
-========
+--------
 
 The purpose of this `Curry <http://curry.esperide.org/>`_ cookbook is to help newcomers getting up to speed with functional programming when relying on the `Haskell <https://www.haskell.org/>`_ language [#]_ for that.
 
@@ -80,33 +81,91 @@ So the goal of Curry is to be quicker to read/browse than it would be to start t
 
 
 
+------------------
 Teaching Resources
-==================
+------------------
 
 We would certainly recommend browsing the pleasant `Learn You a Haskell for Great Good! <http://learnyouahaskell.com/>`_ website or, even better, buying their book; another worthwhile book is *Programming in Haskell*, whose author is Graham Hutton, that we found interesting and well-written as well.
 
 Of course the `official Haskell website <https://www.haskell.org/>`_ is also of interest.
 
 
+-------------------
+Haskell In Practice
+-------------------
 
+
+Installing Haskell
+==================
+
+On Arch Linux : ``pacman -Sy ghc``.
+
+See also our corresponding script `for continuous integration <https://github.com/Olivier-Boudeville/Ceylan-Curry/blob/main/.github/workflows/curry-ci.yml>`_.
+
+
+
+Running Haskell
+===============
+
+
+
+Haskell-related Extensions
+==========================
+
+Main extensions are:
+
+- ``.hs``: Haskell source code (to preprocess then compile)
+- ``.lhs``: literate Haskell source (to unlit, preprocess and compile), where all text is comment by default, and code is specifically designated as such
+- ``.hi``: interface file; contains information about exported symbols
+- ``.hc``: intermediate C files
+
+A very basic ``Foobar.hs`` source file once compiled results in a standard ``Foobar.o`` object file, typically::
+
+  ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), not stripped
+
+If ``Foobar.hs`` defines a suitable ``main`` function, once linked it results in a standard ``Foobar.o`` executable, typically (depending on the build options)::
+
+  ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 4.4.0, BuildID[sha1]=[...], not stripped
+
+In terms of shared libraries, this boils down to, for example::
+
+	linux-vdso.so.1
+	libHSbase-4.14.2.0-ghc8.10.5.so => /usr/lib/ghc-8.10.5/base-4.14.2.0/libHSbase-4.14.2.0-ghc8.10.5.so
+	libHSinteger-gmp-1.0.3.0-ghc8.10.5.so => /usr/lib/ghc-8.10.5/integer-gmp-1.0.3.0/libHSinteger-gmp-1.0.3.0-ghc8.10.5.so
+	libHSghc-prim-0.6.1-ghc8.10.5.so => /usr/lib/ghc-8.10.5/ghc-prim-0.6.1/libHSghc-prim-0.6.1-ghc8.10.5.so
+	libHSrts-ghc8.10.5.so => /usr/lib/ghc-8.10.5/rts/libHSrts-ghc8.10.5.so
+	libgmp.so.10 => /usr/lib/libgmp.so.10
+	libc.so.6 => /usr/lib/libc.so.6
+	libm.so.6 => /usr/lib/libm.so.6
+	librt.so.1 => /usr/lib/librt.so.1
+	libdl.so.2 => /usr/lib/libdl.so.2
+	libffi.so.7 => /usr/lib/libffi.so.7
+	libpthread.so.0 => /usr/lib/libpthread.so.0
+	/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2
+
+
+
+-------
 Support
-=======
+-------
 
 Bugs, questions, remarks, patches, requests for enhancements, etc. are to be reported to the `project interface <https://github.com/Olivier-Boudeville/Ceylan-Curry>`_ (typically `issues <https://github.com/Olivier-Boudeville/Ceylan-Curry/issues>`_) or directly at the email address mentioned at the beginning of this cookbook.
 
 
 
+-------------
 Please React!
-=============
+-------------
 
 If you have information more detailed or more recent than those presented in this document, if you noticed errors, neglects or points insufficiently discussed, drop us a line! (for that, follow the Support_ guidelines).
 
 
 
+-----------
 Ending Word
-===========
+-----------
 
-Have fun with Ceylan-Curry!
+Have fun with Haskell and functional programming!
 
 :raw-html:`<center><img src="curry-title.png" id="responsive-image-small"></img></center>`
 :raw-latex:`\begin{figure}[h] \centering \includegraphics[scale=0.2]{curry-title.png} \end{figure}`
