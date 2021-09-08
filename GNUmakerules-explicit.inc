@@ -7,7 +7,11 @@
 # Prerequisite: CURRY_TOP must be set.
 
 
-.PHONY: default-curry-rule clean-compilation
+.PHONY: default-curry-rule clean-compilation                                   \
+		all all-pre-hook all-recurse-pre-hook all-parallel-recurse all-recurse \
+		test test-recurse                                                      \
+		clean clean-recurse clean-compilation                                  \
+		info-files
 
 
 # The first non-generic, therefore default, rule:
@@ -37,7 +41,7 @@ all: all-pre-hook
 else
 
 
-all: all-recurse-pre-hook all-recurse 
+all: all-recurse-pre-hook all-recurse
 
 
 endif
@@ -64,11 +68,20 @@ all-parallel-recurse:
 	@for m in $(MODULES_DIRS); do if ! (if [ -d $$m ]; then cd $$m && $(MAKE) -s all -j $(CORE_COUNT) CMD_LINE_OPT="${CMD_LINE_OPT}" && cd ..; else echo "    (directory $$m skipped)"; fi); then exit 1; fi; done
 
 
-# Teompary:
-all-recurse: $(TARGET_EXECS)
+# Temporary:
+all-recurse: $(TEST_TARGETS)
 	@echo "  Building all in "$(PWD) #$$(basename $(PWD))
 	@for m in $(MODULES_DIRS); do if ! (if [ -d $$m ]; then cd $$m && $(MAKE) -s all CMD_LINE_OPT="${CMD_LINE_OPT}" && cd ..; else echo "  (directory $$m skipped)"; fi); then exit 1; fi; done
 
+
+
+test: all test-recurse
+	@for t in $(TEST_TARGETS); do if ! ./$$t; then echo "Test failed." 1>&2; exit 1; else echo; fi; done
+
+
+test-recurse:
+	@echo "   Testing all in $$(basename $(PWD))"
+	@for m in $(MODULES_DIRS); do if ! (if [ -d $$m ]; then cd $$m && $(MAKE) -s test CMD_LINE_OPT="${CMD_LINE_OPT}" && cd ..; else echo "	  (directory $$m skipped)"; fi); then exit 1; fi; done
 
 
 ifeq ($(ROOT_MAKEFILE),true)
@@ -97,3 +110,12 @@ clean: clean-compilation clean-recurse
 clean-compilation:
 	@#echo " Cleaning compilation byproducts in $$(pwd)"
 	-@/bin/rm -f *.hi *.o
+
+
+info-files:
+	@echo "ALL_HS_SOURCES = $(ALL_HS_SOURCES)"
+	@echo "EXCLUDED_HS_SOURCES = $(EXCLUDED_HS_SOURCES)"
+	@echo "HS_SOURCES = $(HS_SOURCES)"
+	@echo "HS_TARGETS = $(HS_TARGETS)"
+	@echo "TEST_HS_SOURCES = $(TEST_HS_SOURCES)"
+	@echo "TEST_HS_TARGETS = $(TEST_HS_TARGETS)"

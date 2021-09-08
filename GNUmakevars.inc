@@ -155,6 +155,24 @@ ifndef PACKAGE_TOP
 endif
 
 
+# File section.
+
+ALL_HS_SOURCES = $(wildcard *.hs)
+
+# Not needed yet:
+EXCLUDED_HS_SOURCES =
+
+HS_SOURCES = $(filter-out $(EXCLUDED_HS_SOURCES), $(ALL_HS_SOURCES))
+
+HS_TARGETS = $(patsubst %.hs,%,$(HS_SOURCES))
+
+
+# Excludes the tests depending on prerequisites:
+TEST_HS_SOURCES = $(filter-out $(EXCLUDED_HS_SOURCES), $(wildcard *Test.hs))
+
+TEST_HS_TARGETS = $(patsubst %.hs,%,$(TEST_HS_SOURCES))
+
+
 # Interpreter section.
 
 HASKELL_INTERPRETER := $$(which ghci 2>/dev/null)
