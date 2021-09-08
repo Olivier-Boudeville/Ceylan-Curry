@@ -39,6 +39,7 @@ GITHUB_PAGES_BASE := $(shell basename "$(CURRY_WEB_MIRROR_BRANCH)")
 # Default do-nothing target:
 all:
 	@echo "  Run 'make doc' to generate the documentation of the 'Curry' cookbook."
+	@echo "  Note that the corresponding make targets rely on ones defined by the Ceylan-Myriad layer, which thus must be available so that they can succeed."
 
 
 doc: html pdf
