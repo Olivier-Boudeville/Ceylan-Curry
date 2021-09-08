@@ -1,4 +1,6 @@
-# Ceylan-Curry: an Haskell Cookbook
+[![Haskell CI](https://github.com/Olivier-Boudeville/Ceylan-Curry/actions/workflows/curry-ci.yml/badge.svg)](https://github.com/Olivier-Boudeville/Ceylan-Curry/actions/workflows/curry-ci.yml)
+
+# Ceylan-Curry: a Haskell Cookbook
 
 ![](/doc/curry-title.png)
 
