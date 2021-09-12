@@ -8,11 +8,12 @@
 <meta content="Curry, Haskell, program, functional programming" name="keywords" />
 <link rel="stylesheet" href="pygments-default.css" type="text/css" />
 <link rel="stylesheet" href="curry.css" type="text/css" />
+<link href="curry-icon.png" rel="icon">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<div class="document" id="ceylan-curry-an-haskell-cookbook">
-<h1 class="title">Ceylan-Curry, an Haskell Cookbook</h1>
+<div class="document" id="ceylan-curry-a-haskell-cookbook">
+<h1 class="title">Ceylan-Curry, a Haskell Cookbook</h1>
 
 <span class="target" id="top"></span><p><span class="raw-html"><a name="curry_top"></a></span></p>
 <p><span class="raw-html"><div class="banner"><p><em>Curry Cookbook</em> <a href="http://curry.esperide.org">browse latest</a> <a href="https://olivier-boudeville.github.io/Ceylan-Curry/index.html">browse mirror</a> <a href="Ceylan-Curry-cookbook-english.pdf">get PDF</a> <a href="#curry_top">go to top</a> <a href="#curry_toc">go to toc</a> <a href="#curry_bottom">go to bottom</a> <a href="https://github.com/Olivier-Boudeville/Ceylan-Curry">go to project</a> <a href="mailto:about(dash)curry(at)esperide(dot)com?subject=[Ceylan-Curry]%20Remark">email us</a></p></div></span></p>
@@ -28,7 +29,7 @@
 </tr>
 <tr class="field"><th class="field-name">Creation date:</th><td class="field-body">Tuesday, September 7, 2021</td>
 </tr>
-<tr class="field"><th class="field-name">Lastly updated:</th><td class="field-body">Tuesday, September 7, 2021</td>
+<tr class="field"><th class="field-name">Lastly updated:</th><td class="field-body">Sunday, September 12, 2021</td>
 </tr>
 <tr class="field"><th class="field-name">Version:</th><td class="field-body">0.0.1</td>
 </tr>
@@ -48,16 +49,100 @@
 <div class="contents topic" id="id1">
 <span id="table-of-contents"></span><p class="topic-title"><strong>Table of Contents</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="#overview" id="id6">Overview</a></li>
-<li><a class="reference internal" href="#teaching-resources" id="id7">Teaching Resources</a></li>
-<li><a class="reference internal" href="#support" id="id8">Support</a></li>
-<li><a class="reference internal" href="#please-react" id="id9">Please React!</a></li>
-<li><a class="reference internal" href="#ending-word" id="id10">Ending Word</a></li>
+<li><a class="reference internal" href="#overview" id="id24">Overview</a></li>
+<li><a class="reference internal" href="#cookbook-conventions" id="id25">Cookbook Conventions</a></li>
+<li><a class="reference internal" href="#concepts" id="id26">Concepts</a><ul>
+<li><a class="reference internal" href="#functional-programming-fp" id="id27">Functional Programming (FP)</a></li>
+<li><a class="reference internal" href="#arity" id="id28">Arity</a></li>
+<li><a class="reference internal" href="#expressions" id="id29">Expressions</a></li>
+<li><a class="reference internal" href="#operators" id="id30">Operators</a><ul>
+<li><a class="reference internal" href="#operator-precedence" id="id31">Operator Precedence</a></li>
+<li><a class="reference internal" href="#operator-associativity" id="id32">Operator Associativity</a></li>
+<li><a class="reference internal" href="#operator-calls" id="id33">Operator Calls</a></li>
+<li><a class="reference internal" href="#some-operators-of-interest" id="id34">Some Operators of Interest</a><ul>
+<li><a class="reference internal" href="#calling-functions-the-pseudo-operator" id="id35">Calling functions: the &quot; &quot; (pseudo-)operator</a></li>
+<li><a class="reference internal" href="#consing-lists-the-operator" id="id36">Consing lists: the &quot;:&quot; operator</a></li>
+<li><a class="reference internal" href="#function-arrow-the-operator" id="id37">Function Arrow: the &quot;-&gt;&quot; operator</a></li>
+<li><a class="reference internal" href="#composition-the-operator" id="id38">Composition: the &quot;.&quot; operator</a></li>
+<li><a class="reference internal" href="#non-binding-function-application-the-operator" id="id39">Non-Binding Function Application: the &quot;$&quot; operator</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id8" id="id40">Function</a></li>
+<li><a class="reference internal" href="#currying" id="id41">Currying</a></li>
+<li><a class="reference internal" href="#id11" id="id42">Side Effects</a></li>
+<li><a class="reference internal" href="#typing" id="id43">Typing</a><ul>
+<li><a class="reference internal" href="#notion-of-type" id="id44">Notion of Type</a></li>
+<li><a class="reference internal" href="#id14" id="id45">Algebraic Datatypes</a></li>
+<li><a class="reference internal" href="#basic-types" id="id46">Basic Types</a><ul>
+<li><a class="reference internal" href="#char" id="id47">Char</a></li>
+<li><a class="reference internal" href="#tuple" id="id48">Tuple</a></li>
+<li><a class="reference internal" href="#list" id="id49">List</a></li>
+<li><a class="reference internal" href="#string" id="id50">String</a></li>
+<li><a class="reference internal" href="#id16" id="id51">Function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#type-class" id="id52">Type Class</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#monad" id="id53">Monad</a><ul>
+<li><a class="reference internal" href="#informal-descriptions" id="id54">Informal Descriptions</a></li>
+<li><a class="reference internal" href="#more-formally" id="id55">More Formally</a></li>
+<li><a class="reference internal" href="#in-a-nutshell" id="id56">In a Nutshell</a></li>
+<li><a class="reference internal" href="#examples" id="id57">Examples</a></li>
+<li><a class="reference internal" href="#properties" id="id58">Properties</a></li>
+<li><a class="reference internal" href="#interest" id="id59">Interest</a></li>
+<li><a class="reference internal" href="#usages" id="id60">Usages</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#lazy-evaluation" id="id61">Lazy Evaluation</a></li>
+<li><a class="reference internal" href="#arrows" id="id62">Arrows</a></li>
+<li><a class="reference internal" href="#id21" id="id63">Lambda Calculus</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#haskell-syntax" id="id64">Haskell Syntax</a><ul>
+<li><a class="reference internal" href="#reserved-words" id="id65">Reserved Words</a></li>
+<li><a class="reference internal" href="#comments" id="id66">Comments</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#haskell-tools" id="id67">Haskell Tools</a><ul>
+<li><a class="reference internal" href="#glasgow-haskell-tools" id="id68">Glasgow Haskell Tools</a></li>
+<li><a class="reference internal" href="#haddock-a-haskell-documentation-tool" id="id69">Haddock: a Haskell Documentation Tool</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#haskell-conventions" id="id70">Haskell Conventions</a><ul>
+<li><a class="reference internal" href="#index" id="id71">Index</a></li>
+<li><a class="reference internal" href="#whitespaces" id="id72">Whitespaces</a></li>
+<li><a class="reference internal" href="#naming" id="id73">Naming</a></li>
+<li><a class="reference internal" href="#shortness" id="id74">Shortness</a></li>
+<li><a class="reference internal" href="#layout-indentation" id="id75">Layout &amp; Indentation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#haskell-in-practice" id="id76">Haskell In Practice</a><ul>
+<li><a class="reference internal" href="#installing-haskell" id="id77">Installing Haskell</a></li>
+<li><a class="reference internal" href="#running-haskell" id="id78">Running Haskell</a></li>
+<li><a class="reference internal" href="#haskell-related-filenames" id="id79">Haskell-related Filenames</a><ul>
+<li><a class="reference internal" href="#filenames" id="id80">Filenames</a></li>
+<li><a class="reference internal" href="#extensions" id="id81">Extensions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#build-system" id="id82">Build System</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#haskell-resources" id="id83">Haskell Resources</a><ul>
+<li><a class="reference internal" href="#to-learn" id="id84">To Learn</a></li>
+<li><a class="reference internal" href="#cheat-sheets" id="id85">Cheat Sheets</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#support" id="id86">Support</a></li>
+<li><a class="reference internal" href="#please-react" id="id87">Please React!</a></li>
+<li><a class="reference internal" href="#ending-word" id="id88">Ending Word</a></li>
 </ul>
 </div>
 <p></p>
 <div class="section" id="overview">
-<h1><a class="toc-backref" href="#id6">Overview</a></h1>
+<h1><a class="toc-backref" href="#id24">Overview</a></h1>
 <p>The purpose of this <a class="reference external" href="http://curry.esperide.org/">Curry</a> cookbook is to help newcomers getting up to speed with functional programming when relying on the <a class="reference external" href="https://www.haskell.org/">Haskell</a> language <a class="footnote-reference" href="#id5" id="id4">[1]</a> for that.</p>
 <table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -65,25 +150,720 @@
 <tr><td class="label"><a class="fn-backref" href="#id4">[1]</a></td><td>This cookbook is in some way a Haskell counterpart of what we did for Erlang, with the software stack whose first layer is <a class="reference external" href="https://myriad.esperide.org">Ceylan-Myriad</a>.</td></tr>
 </tbody>
 </table>
-<p>More precisely, this cookbook is to summarise the various elements that we found useful to remember when wanting to program in Haskell whereas either one never really practiced that art or already forgot essential elements of it.</p>
-<p>So the goal of Curry is to be quicker to read/browse than it would be to start the learning again from scratch and never reaching the latter parts thereof (knowing that the learning curve of Haskell is unfortunately rather steep).</p>
+<p>More precisely, this cookbook is to summarise the various elements that we found useful to remember when wanting to program in Haskell. We hope that it may be useful whereas either one never really practiced that art or already forgot essential elements of it.</p>
+<p>So the goal of Curry is to be quicker to read/browse than it would be to start the learning again from scratch, and never reaching the latter parts thereof (knowing that the learning curve of Haskell is unfortunately rather steep).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As this cookbook is being written as we are in the process of learning Haskell, errors, misconceptions and epic blunders are bound to occur in this text; if you detect such issues, please <a class="reference internal" href="#contact">contact</a> us so that we can correct this document accordingly. Thanks in advance!</p>
 </div>
-<div class="section" id="teaching-resources">
-<h1><a class="toc-backref" href="#id7">Teaching Resources</a></h1>
+</div>
+<div class="section" id="cookbook-conventions">
+<h1><a class="toc-backref" href="#id25">Cookbook Conventions</a></h1>
+<p>The <tt class="docutils literal">≡</tt> character denotes here equivalence of expressions; ex: <tt class="docutils literal">2 * x&nbsp; ≡&nbsp; x + x</tt>.</p>
+<p>For clarity, the formal characters like λ, ≫ and → are replaced by the one that you would type (namely <tt class="docutils literal">\</tt>, <tt class="docutils literal">&gt;&gt;</tt> and <tt class="docutils literal"><span class="pre">-&gt;</span></tt>).</p>
+</div>
+<div class="section" id="concepts">
+<h1><a class="toc-backref" href="#id26">Concepts</a></h1>
+<div class="section" id="functional-programming-fp">
+<span id="fp"></span><h2><a class="toc-backref" href="#id27">Functional Programming (FP)</a></h2>
+<p>A programming style based on the application of functions (<a class="reference external" href="https://en.wikipedia.org/wiki/Functional_programming">more information</a>).</p>
+</div>
+<div class="section" id="arity">
+<h2><a class="toc-backref" href="#id28">Arity</a></h2>
+<p>The (maximal) number of arguments expected by a function.</p>
+</div>
+<div class="section" id="expressions">
+<h2><a class="toc-backref" href="#id29">Expressions</a></h2>
+<ul class="simple">
+<li>conditional ones: if/then/else (ex: <tt class="docutils literal">if n &gt;= 0 then n else <span class="pre">-n</span></tt>)</li>
+<li>guarded: <tt class="docutils literal">|</tt> can be read as &quot;when (some condition is true)&quot;; knowing that <tt class="docutils literal">otherwise = True</tt> allows to define default clauses</li>
+<li>lambda expressions are just anonymous functions; ex: <tt class="docutils literal">\x <span class="pre">-&gt;</span> 4 + 2*x</tt></li>
+</ul>
+</div>
+<div class="section" id="operators">
+<h2><a class="toc-backref" href="#id30">Operators</a></h2>
+<div class="section" id="operator-precedence">
+<h3><a class="toc-backref" href="#id31">Operator Precedence</a></h3>
+<p>Precedence allows to define the <a class="reference external" href="https://en.wikipedia.org/wiki/Order_of_operations">order of the operations</a>.</p>
+<p>If the precedence of <tt class="docutils literal">op1</tt> is higher than the one of <tt class="docutils literal">op2</tt>, then <tt class="docutils literal">x op1 y op2 z</tt> shall be read as: <tt class="docutils literal">(x op1 y) op2 z</tt>.</p>
+<p>See the <a class="reference external" href="https://www.haskell.org/onlinereport/haskell2010/haskellch4.html#x10-820004.4.2">precedence table</a> for all Haskell operators.</p>
+<p>By using the <tt class="docutils literal">:info</tt> GHCi command, the precedence levels of operators can be returned:</p>
+<pre class="code haskell literal-block">
+<span class="kt">Prelude</span><span class="o">&gt;</span> <span class="kt">:</span><span class="n">info</span> <span class="o">+</span>
+<span class="kr">type</span> <span class="kt">Num</span> <span class="ow">::</span> <span class="o">*</span> <span class="ow">-&gt;</span> <span class="kt">Constraint</span>
+<span class="kr">class</span> <span class="kt">Num</span> <span class="n">a</span> <span class="kr">where</span>
+  <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="ow">::</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+  <span class="o">...</span>
+    <span class="c1">-- Defined in ‘GHC.Num’</span>
+<span class="kr">infixl</span> <span class="mi">6</span> <span class="o">+</span>
+</pre>
+</div>
+<div class="section" id="operator-associativity">
+<h3><a class="toc-backref" href="#id32">Operator Associativity</a></h3>
+<p>This determines <a class="reference external" href="https://en.wikipedia.org/wiki/Operator_associativity">how operators of the same precedence are grouped in the absence of parentheses</a>.</p>
+<p id="right-associative"><span id="left-associative"></span><span id="associative"></span>Operators may be:</p>
+<ul class="simple">
+<li><strong>associative</strong>, meaning the operations can be grouped arbitrarily</li>
+<li><strong>left-associative</strong>, meaning the operations are grouped from the left: <tt class="docutils literal"><span class="pre">2-3+4</span> = <span class="pre">(2-3)+4</span></tt></li>
+<li><strong>right-associative</strong>, meaning the operations are grouped from the right: <tt class="docutils literal">2^3^4 = <span class="pre">2^(3^4)</span></tt></li>
+<li><strong>non-associative</strong>, meaning operations cannot be chained, often because the output type is incompatible with the input types</li>
+</ul>
+</div>
+<div class="section" id="operator-calls">
+<h3><a class="toc-backref" href="#id33">Operator Calls</a></h3>
+<p>Operators are just functions that can be called:</p>
+<ul class="simple">
+<li>either directly: <tt class="docutils literal">op1 x</tt> or <tt class="docutils literal">op2 x y</tt>; for example: <tt class="docutils literal"><span class="pre">(-x)</span></tt> or <tt class="docutils literal">(+) x 4</tt></li>
+<li>or, for the ones of arity 2, as infix operators: <tt class="docutils literal">x `op2` y&nbsp; ≡&nbsp; op2 x y</tt></li>
+</ul>
+</div>
+<div class="section" id="some-operators-of-interest">
+<h3><a class="toc-backref" href="#id34">Some Operators of Interest</a></h3>
+<div class="section" id="calling-functions-the-pseudo-operator">
+<span id="function-application"></span><h4><a class="toc-backref" href="#id35">Calling functions: the &quot; &quot; (pseudo-)operator</a></h4>
+<p>Being central in <a class="reference internal" href="#fp">FP</a>, <strong>function application</strong> is symbolised just by a space.</p>
+<p>It behaves as the operator of the highest precedence; therefore <tt class="docutils literal">f a + b&nbsp; ≡&nbsp; (f a) + b</tt></p>
+<p>(rather than <tt class="docutils literal">f (a + b)</tt>) <a class="footnote-reference" href="#id7" id="id6">[2]</a>.</p>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[2]</a></td><td>Another example: an expression that could be described informally as <tt class="docutils literal">f(a,b) + c.d</tt> translates in Haskell as <tt class="docutils literal">f a b + c*d</tt> or <tt class="docutils literal">((f a) b) + c*d&quot;</tt>.</td></tr>
+</tbody>
+</table>
+<p>This pseudo-operator is <a class="reference internal" href="#left-associative">left-associative</a>: <tt class="docutils literal">f g h&nbsp; ≡&nbsp; ((f g) h)</tt>.</p>
+<p><tt class="docutils literal">f g x</tt> corresponds to the application of a function <tt class="docutils literal">g</tt> and of a variable <tt class="docutils literal">x</tt> at <tt class="docutils literal">f</tt> (i.e. <tt class="docutils literal">f(g,x)</tt>); if wanting to express <tt class="docutils literal">f(g(x))</tt>, rely on <tt class="docutils literal">f (g x)</tt> or, even better, on <tt class="docutils literal">f.g x</tt>.</p>
+</div>
+<div class="section" id="consing-lists-the-operator">
+<h4><a class="toc-backref" href="#id36">Consing lists: the &quot;:&quot; operator</a></h4>
+<p>This operator, named <tt class="docutils literal">cons</tt> (for <em>construct</em>), allows to define lists by appending successively elements, starting from the empty list (<tt class="docutils literal">[]</tt>; designated as <tt class="docutils literal">nil</tt>).</p>
+<p>The <tt class="docutils literal">:</tt> operator is <a class="reference internal" href="#right-associative">right-associative</a>:</p>
+<pre class="literal-block">
+x:y:z:l  ≡  x:(y:(z:l))
+</pre>
+<p>Example:</p>
+<pre class="code haskell literal-block">
+<span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="ow">=</span> <span class="mi">4</span><span class="kt">:</span><span class="mi">5</span><span class="kt">:</span><span class="mi">3</span><span class="kt">:[]</span>
+</pre>
+</div>
+<div class="section" id="function-arrow-the-operator">
+<span id="function-arrow"></span><h4><a class="toc-backref" href="#id37">Function Arrow: the &quot;-&gt;&quot; operator</a></h4>
+<p>It allows to specify the datatypes involved in the type definition of a function.</p>
+<p>This operator is <a class="reference internal" href="#right-associative">right-associative</a>:</p>
+<pre class="literal-block">
+A -&gt; B -&gt; C -&gt;  ≡  A -&gt; (B -&gt; (C -&gt; D))
+</pre>
+<p>Example:</p>
+<pre class="code haskell literal-block">
+<span class="c1">-- mult :: Int -&gt; (Int -&gt; (Int -&gt; Int))</span>
+<span class="nf">mult</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+
+<span class="c1">-- mult x y z = ((mult x) y) z</span>
+<span class="nf">mult</span> <span class="n">x</span> <span class="n">y</span> <span class="n">z</span> <span class="ow">=</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">z</span>
+</pre>
+</div>
+<div class="section" id="composition-the-operator">
+<h4><a class="toc-backref" href="#id38">Composition: the &quot;.&quot; operator</a></h4>
+</div>
+<div class="section" id="non-binding-function-application-the-operator">
+<h4><a class="toc-backref" href="#id39">Non-Binding Function Application: the &quot;$&quot; operator</a></h4>
+<p>The <tt class="docutils literal">$</tt> operator is another way, besides the usual <a class="reference internal" href="#function-application">function application</a> (denoted by a space) , of applying arguments to a function.</p>
+<p>This is the operator of least precedence. It has been introduced in order to further avoid the use of parentheses:</p>
+<pre class="literal-block">
+a $ b op c  ≡  a (b op c)
+</pre>
+<p>When a <tt class="docutils literal">$</tt> is encountered, the expression on its right is applied as the argument to the function on its left, as if a virtual parenthesis was opened there, and a closing one added at the end of the expression.</p>
+<p>This operator is <a class="reference internal" href="#right-associative">right-associative</a>: <tt class="docutils literal">f $ g $ h&nbsp; ≡&nbsp; (f $ (g $ h))</tt>.</p>
+<p>So this operator is the &quot;opposite&quot; of the base <a class="reference internal" href="#function-application">function application</a> in terms of precedence and associativity - but otherwise is the same in terms of definition (including typing):</p>
+<pre class="code haskell literal-block">
+<span class="p">(</span><span class="o">$</span><span class="p">)</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span>
+<span class="nf">f</span> <span class="o">$</span> <span class="n">x</span> <span class="ow">=</span> <span class="n">f</span> <span class="n">x</span>
+</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<span id="function"></span><h2><a class="toc-backref" href="#id40">Function</a></h2>
+<p>An association from a set of arguments to a set of corresponding results.</p>
+<pre class="code haskell literal-block">
+<span class="nf">double</span> <span class="n">x</span> <span class="ow">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span>
+
+<span class="nf">sum</span> <span class="ow">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+<span class="nf">sum</span> <span class="kt">[]</span>     <span class="ow">=</span> <span class="mi">0</span>
+<span class="nf">sum</span> <span class="p">(</span><span class="n">n</span><span class="kt">:</span><span class="n">ns</span><span class="p">)</span> <span class="ow">=</span> <span class="n">n</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">ns</span>
+</pre>
+<p>A function may not be defined for all (well-typed) combinations of its arguments.</p>
+<p>For example <tt class="docutils literal">head []</tt> is to throw an exception.</p>
+<p>A function is a value like the other datatypes (first-class citizen).</p>
+<p>Thanks to the <a class="reference external" href="https://en.wikipedia.org/wiki/Algebraic_data_type">algebraic datatypes</a> such as lists and tuples, a function may take and return an arbitrary number of values (thus including functions).</p>
+<p>A function may be only <strong>partially applied</strong>: its last argument(s) may not specified in a given call. Then the value of the overall expression is a function of these remaining, unspecified arguments.</p>
+<p>For example, if <tt class="docutils literal">f :: (Int,Float) <span class="pre">-&gt;</span> Bool</tt> then <tt class="docutils literal">f 3 :: Float <span class="pre">-&gt;</span> Bool</tt>.</p>
+<p>By default functions are polymorphic, insofar as they will accept all types determined as compatible. For example <tt class="docutils literal">zip :: [a] <span class="pre">-&gt;</span> [b] <span class="pre">-&gt;</span> [(a,b)]</tt> can handle any types for <tt class="docutils literal">a</tt> and <tt class="docutils literal">b</tt>.</p>
+<p>Functions are defined from expressions and based on pattern matching, which operates on few possible patterns that are examined in turn, from top to bottom:</p>
+<ul class="simple">
+<li>function application, like in:</li>
+</ul>
+<pre class="code haskell literal-block">
+<span class="p">(</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="ow">::</span> <span class="kt">Bool</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+<span class="kt">True</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="ow">=</span> <span class="n">b</span>
+<span class="kt">False</span> <span class="o">&amp;&amp;</span> <span class="kr">_</span> <span class="ow">=</span> <span class="kt">False</span>
+</pre>
+<ul class="simple">
+<li>tuple patterns, like in:</li>
+</ul>
+<pre class="code haskell literal-block">
+<span class="nf">fst</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+<span class="nf">fst</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="kr">_</span><span class="p">)</span> <span class="ow">=</span> <span class="n">x</span>
+</pre>
+<ul class="simple">
+<li>list patterns, like in:</li>
+</ul>
+<pre class="code haskell literal-block">
+<span class="nf">tail</span> <span class="ow">::</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="nf">tail</span> <span class="p">(</span><span class="kr">_</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">xs</span>
+</pre>
+<p>The ‘_’ character acts as a &quot;wildcard&quot; (it matches any value).</p>
+<p>Note that a non-empty list is (a bit surprisingly) to be pattern-matched with <tt class="docutils literal">(x:xs)</tt> and not <tt class="docutils literal">[x:xs]</tt>. For example:</p>
+<pre class="code haskell literal-block">
+<span class="nf">product</span> <span class="ow">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+<span class="nf">product</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="mi">1</span>
+<span class="nf">product</span> <span class="p">(</span><span class="n">n</span><span class="kt">:</span><span class="n">ns</span><span class="p">)</span> <span class="ow">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">product</span> <span class="n">ns</span>
+</pre>
+<p>The same name cannot be specified for two arguments to match when they are equal; a guard must be used for that. Finally pattern matching can operate on few possible patterns: function application, tuple and list ones, that's it.</p>
+</div>
+<div class="section" id="currying">
+<h2><a class="toc-backref" href="#id41">Currying</a></h2>
+<p>A function taking its arguments one by one (one at a time, from left to right), each time returning a function of a decremented arity, is said to be <strong>curried</strong>.</p>
+<p>Such 1-arity functions are those directly modelled by the <a class="reference internal" href="#lambda-calculus">lambda calculus</a>, an essential base of the functional languages.</p>
+<p>As the <a class="reference internal" href="#function-arrow">function arrow</a> operator (<tt class="docutils literal"><span class="pre">-&gt;</span></tt>) is right <a class="reference internal" href="#associative">associative</a>, the type of functions is preferably written as:</p>
+<pre class="code haskell literal-block">
+<span class="nf">f</span> <span class="ow">::</span> <span class="kt">TArg1</span> <span class="ow">-&gt;</span> <span class="kt">TArg2</span> <span class="ow">-&gt;</span> <span class="o">...</span> <span class="ow">-&gt;</span> <span class="kt">TArgn</span> <span class="ow">-&gt;</span> <span class="kt">TResult</span>
+</pre>
+<p>This corresponds to the following actual type:</p>
+<pre class="code haskell literal-block">
+<span class="nf">f</span> <span class="ow">::</span> <span class="kt">TArg1</span> <span class="ow">-&gt;</span> <span class="p">(</span> <span class="kt">TArg2</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="o">...</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="kt">TArgn</span> <span class="ow">-&gt;</span> <span class="kt">TResult</span><span class="p">))</span><span class="o">...</span><span class="p">)</span>
+</pre>
+<p>Consequently, as their arguments are to be applied one by one from left to right, the `` `` operator (function application is represented by the space character) is right-associative:</p>
+<pre class="literal-block">
+f a1 a2 ... an  ≡  (((f a1) a2) ... an)
+</pre>
+<p>Functions can thus all be seen as curried ones, and can also be directly transposed as lambda ones; for example the following definitions define the same function:</p>
+<pre class="code haskell literal-block">
+<span class="nf">add</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+<span class="nf">add</span> <span class="n">x</span> <span class="n">y</span> <span class="ow">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="nf">add</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span><span class="p">)</span>
+<span class="nf">add</span> <span class="ow">=</span> <span class="nf">\</span><span class="n">x</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="nf">\</span><span class="n">y</span> <span class="ow">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+</pre>
+<p>In this latter form:</p>
+<ul class="simple">
+<li>the type specification and the definition of the function respect the same structure: <tt class="docutils literal">XXX <span class="pre">-&gt;</span> (XXX <span class="pre">-&gt;</span> XXX)</tt></li>
+<li>the function is designated (on the left of the <tt class="docutils literal">=</tt> sign) without listing its arguments (we have <tt class="docutils literal">add =</tt>, not <tt class="docutils literal">add x y =</tt>) <a class="footnote-reference" href="#id10" id="id9">[3]</a></li>
+<li>if the purpose of the function is to return another one, its intent is clearer once expressed as a lamdba function</li>
+</ul>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[3]</a></td><td>This is certainly clearer yet, if no type specification is given, the arity of the function is only implicit then.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id11">
+<span id="side-effects"></span><h2><a class="toc-backref" href="#id42">Side Effects</a></h2>
+<p>They correspond to all the consequences that the evaluation of a code (program, function) incurs besides its returned value.</p>
+<p>Example:</p>
+<ul class="simple">
+<li>writing content on file, or on the screen</li>
+<li>reading from file or from the input devices (keyboard, mouse)</li>
+<li>changing the state of a value accessible from outside of the function</li>
+<li>sending a message to another process or through the network</li>
+<li>drawing a random value</li>
+</ul>
+<p>These impure events are difficult to manage yet are generally necessary, as the purpose of a program is to trigger &quot;interesting side-effects&quot;; a strictly pure program would most probably have no actual use (except using time, processing resources and adding the possibility of failure).</p>
+</div>
+<div class="section" id="typing">
+<h2><a class="toc-backref" href="#id43">Typing</a></h2>
+<div class="section" id="notion-of-type">
+<h3><a class="toc-backref" href="#id44">Notion of Type</a></h3>
+<p>A type is a set of associated values.</p>
+<p><tt class="docutils literal">e :: T</tt> means that expression <tt class="docutils literal">e</tt> is of type <tt class="docutils literal">T</tt>.</p>
+<p>Haskell infers types at compilation (static typing), which prevents to discover many problems <a class="footnote-reference" href="#id13" id="id12">[4]</a> at runtime.</p>
+<table class="docutils footnote" frame="void" id="id13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[4]</a></td><td>Of course other problems may occur; for example <tt class="docutils literal">1 `div` 0</tt> is well-typed yet its execution will fail.</td></tr>
+</tbody>
+</table>
+<p>Some expressions that could be successfully evaluated can nevertheless be rejected on type grounds (ex: <tt class="docutils literal">if True then 1 else False</tt>), but in practice it is hardly a problem.</p>
+</div>
+<div class="section" id="id14">
+<h3><a class="toc-backref" href="#id45">Algebraic Datatypes</a></h3>
+<p>They are defined based on unions of values.</p>
+<p>For example, in:</p>
+<pre class="code haskell literal-block">
+<span class="kr">data</span> <span class="kt">MyFirstType</span> <span class="ow">=</span> <span class="kt">FirstValue</span> <span class="o">|</span> <span class="kt">SecondValue</span> <span class="o">|</span> <span class="kt">FirstConstructor</span> <span class="kt">T</span>
+</pre>
+<p><tt class="docutils literal">MyFirstType</tt> is the <em>name</em> of the type. <tt class="docutils literal">FirstValue</tt> and <tt class="docutils literal">SecondValue</tt> are (constructor) <em>values</em>.</p>
+<p><tt class="docutils literal">FirstConstructor</tt> is a constructor, and <tt class="docutils literal">T</tt> is a <em>type name</em> (not a constructor).</p>
+<p>Type and constructor names <em>can</em> be the same, as no ambiguity can occur.</p>
+<p>Polymorphic types can be defined:</p>
+<pre class="code haskell literal-block">
+<span class="kr">data</span> <span class="kt">MySecondType</span> <span class="n">a</span> <span class="ow">=</span> <span class="kt">ThirdValue</span> <span class="o">|</span> <span class="kt">SecondConstructor</span> <span class="n">a</span> <span class="kt">Int</span>
+</pre>
+</div>
+<div class="section" id="basic-types">
+<h3><a class="toc-backref" href="#id46">Basic Types</a></h3>
+<ul class="simple">
+<li>monomorphic: <tt class="docutils literal">Bool</tt>, <tt class="docutils literal">Char</tt>, <tt class="docutils literal">String :: [Char]</tt>, <tt class="docutils literal">Int</tt>/<tt class="docutils literal">Integer</tt>, <tt class="docutils literal">Float</tt>/<tt class="docutils literal">Double</tt></li>
+<li>polymorphic: list, tuple, function</li>
+</ul>
+<div class="section" id="char">
+<h4><a class="toc-backref" href="#id47">Char</a></h4>
+<p>Example: <tt class="docutils literal">`a`</tt>.</p>
+</div>
+<div class="section" id="tuple">
+<h4><a class="toc-backref" href="#id48">Tuple</a></h4>
+<p>A tuple is a fixed-sized, possibly heterogenous container.</p>
+<p>Example:</p>
+<pre class="code haskell literal-block">
+<span class="p">(</span><span class="s">&quot;I am a tuple&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="kt">True</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="list">
+<h4><a class="toc-backref" href="#id49">List</a></h4>
+<div class="section" id="description">
+<h5>Description</h5>
+<p>A list is an arbitrary-sized, homogeneous container.</p>
+<p>Example:</p>
+<pre class="code haskell literal-block">
+<span class="nf">l1</span> <span class="ow">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
+<span class="nf">l2</span> <span class="ow">=</span> <span class="kt">[]</span>
+<span class="nf">l3</span> <span class="ow">=</span> <span class="p">[</span><span class="mi">100</span><span class="o">..</span><span class="p">]</span>
+<span class="nf">l4</span> <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">2</span> <span class="kt">:</span> <span class="mi">3</span> <span class="kt">:</span> <span class="kt">[]</span>
+</pre>
+</div>
+<div class="section" id="list-comprehension">
+<h5>List Comprehension</h5>
+<p>Example:</p>
+<pre class="code haskell literal-block">
+<span class="nf">u</span> <span class="n">s</span> <span class="ow">=</span> <span class="p">[</span><span class="n">toUpper</span> <span class="n">c</span> <span class="o">|</span> <span class="n">c</span> <span class="ow">&lt;-</span> <span class="n">s</span><span class="p">]</span>
+</pre>
+<p>More information: <a class="reference external" href="https://wiki.haskell.org/List_comprehension">[1]</a>.</p>
+</div>
+<div class="section" id="folds">
+<h5>Folds</h5>
+<p>Like the <tt class="docutils literal">map</tt>, the various folds encapsulate a classical recursion pattern.</p>
+<p><tt class="docutils literal">foldr</tt> (<tt class="docutils literal">r</tt> for right fold) evaluates from right to left, uses a right-associative operator and is directly recursive:</p>
+<pre class="code haskell literal-block">
+<span class="nf">foldr</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">b</span>
+<span class="nf">foldr</span> <span class="n">f</span> <span class="n">v</span> <span class="kt">[]</span>    <span class="ow">=</span> <span class="n">v</span>
+<span class="nf">foldr</span> <span class="n">f</span> <span class="n">v</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span>  <span class="ow">=</span> <span class="n">f</span> <span class="n">x</span> <span class="p">(</span><span class="n">foldr</span> <span class="n">f</span> <span class="n">v</span> <span class="n">xs</span><span class="p">)</span>
+</pre>
+<p><tt class="docutils literal">foldl</tt> (<tt class="docutils literal">l</tt> for left fold) evaluates from left to right, uses a left-associative operator and relies on an accumulator:</p>
+<pre class="code haskell literal-block">
+<span class="nf">foldl</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="n">a</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+<span class="nf">foldl</span> <span class="n">f</span> <span class="n">v</span> <span class="kt">[]</span>    <span class="ow">=</span> <span class="n">v</span>
+<span class="nf">foldl</span> <span class="n">f</span> <span class="n">v</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span>  <span class="ow">=</span> <span class="n">foldl</span> <span class="n">f</span> <span class="p">(</span><span class="n">f</span> <span class="n">v</span> <span class="n">x</span><span class="p">)</span> <span class="n">xs</span>
+</pre>
+</div>
+</div>
+<div class="section" id="string">
+<h4><a class="toc-backref" href="#id50">String</a></h4>
+<p>A string is nothing but a list of (Unicode) characters: <tt class="docutils literal">String ≡ [Char]</tt>.</p>
+<p>Example: <tt class="docutils literal">&quot;Hello!&quot;</tt> or <tt class="docutils literal"><span class="pre">`a`:`b`:`c`:[]</span></tt></p>
+<p>A string cannot spread over multiple lines directly; the backslash (<tt class="docutils literal">\</tt>) character is needed for that:</p>
+<pre class="code haskell literal-block">
+<span class="nf">s</span> <span class="ow">=</span> <span class="s">&quot;This is a unique </span><span class="se">\
+\</span><span class="s">line.&quot;</span>
+</pre>
+<p>(any text between the two <tt class="docutils literal">\</tt> is ignored)</p>
+<p>A newline is designated in a string by <tt class="docutils literal">\n</tt>.</p>
+</div>
+<div class="section" id="id16">
+<h4><a class="toc-backref" href="#id51">Function</a></h4>
+<p>See <a class="reference internal" href="#function">function</a>.</p>
+</div>
+</div>
+<div class="section" id="type-class">
+<h3><a class="toc-backref" href="#id52">Type Class</a></h3>
+<p>A type class is a set of types that support a set of functions called <tt class="docutils literal">methods</tt>.</p>
+<p>For example the <tt class="docutils literal">Eq</tt> class is to gather all types that can be compared for egality (or inegality), based on the following two methods:</p>
+<pre class="code haskell literal-block">
+<span class="p">(</span><span class="o">==</span><span class="p">)</span> <span class="ow">::</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+<span class="p">(</span><span class="o">/=</span><span class="p">)</span> <span class="ow">::</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+</pre>
+<p>A type may belong to one or more classes.</p>
+<p>Class constraints can be specified when typing a function. For example:</p>
+<pre class="code haskell literal-block">
+<span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="ow">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+</pre>
+<p>A type respecting at least one of such constraints is said <em>overloaded</em>, as is the corresponding expression.</p>
+</div>
+</div>
+<div class="section" id="monad">
+<h2><a class="toc-backref" href="#id53">Monad</a></h2>
+<div class="section" id="informal-descriptions">
+<h3><a class="toc-backref" href="#id54">Informal Descriptions</a></h3>
+<p>Various intuitive descriptions of a monad apply:</p>
+<ul class="simple">
+<li>a stateful datastructure representing some processing</li>
+<li>an abstraction, a generic concept allowing to structure programs generically and to unify in a functional way various problems (to structure them and favour separation of concerns)</li>
+<li>programmable &quot;;&quot; (semicolons whose effect can be defined)</li>
+<li>a structure allowing to express imperative traits in functional languages, to convey notions like exceptions or <a class="reference internal" href="#side-effects">side-effects</a> while preserving their purity</li>
+<li>a way of describing and composing impure expressions in a pure context: a monad is an expression still to be evaluated (potentially inducing then side-effects), yet able to be integrated in a pure context</li>
+<li>the code source of an imperative program that, once executed, returns a value of a specified type and that can be chained with other programs taking and returning such values; the language handles then the imperative programs themselves (ex: their source) rather than the values they return</li>
+</ul>
+</div>
+<div class="section" id="more-formally">
+<h3><a class="toc-backref" href="#id55">More Formally</a></h3>
+<p>A monad M is a <tt class="docutils literal">(type, return function, bind function)</tt> triplet with:</p>
+<ul class="simple">
+<li>a monadic constructor: <tt class="docutils literal">t <span class="pre">-&gt;</span> M t</tt></li>
+<li>a function named <tt class="docutils literal">return</tt> that, through the previous constructor, allows to obtain, from a value of type <tt class="docutils literal">a</tt>, a value of monadic type <tt class="docutils literal">M a</tt>: <tt class="docutils literal">return: t <span class="pre">-&gt;</span> M t</tt></li>
+<li>a function named <tt class="docutils literal">bind</tt> that allows to compose a monadic function <a class="footnote-reference" href="#id18" id="id17">[5]</a> with others, represented by the <tt class="docutils literal">&gt;&gt;=</tt> infix operator so that: <tt class="docutils literal">&gt;&gt;= :: M t <span class="pre">-&gt;</span> ( t <span class="pre">-&gt;</span> M u ) <span class="pre">-&gt;</span> M u</tt></li>
+</ul>
+<table class="docutils footnote" frame="void" id="id18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[5]</a></td><td>A monadic function is a function returning a monadic value.</td></tr>
+</tbody>
+</table>
+<p><tt class="docutils literal">Mt &gt;&gt;= f</tt> (i.e. &quot;bind Mt f&quot;) allows to apply the f function to the value of type t encapsulated in <tt class="docutils literal">Mt</tt>; <tt class="docutils literal">&gt;&gt;=</tt> drives the chaining of monadic functions (as such it handles functions, not values).</p>
+<p>By composing <tt class="docutils literal">&gt;&gt;=</tt> with <tt class="docutils literal">return</tt>, any function <tt class="docutils literal">g :: t <span class="pre">-&gt;</span> t</tt> can be applied to a monad of type <tt class="docutils literal">M t</tt> (here the types <tt class="docutils literal">u</tt> and <tt class="docutils literal">t</tt> in the definition of bind are the same).</p>
+<p>These functions (<tt class="docutils literal">f</tt> et <tt class="docutils literal">g</tt>) are only aware of the value (<tt class="docutils literal">t</tt>) encapsulated in the monad, not the monad (<tt class="docutils literal">M t</tt>) itself.</p>
+<p>So the developer composes a sequence of function calls (a pipeline) by chaining binds in an expression. Functions transform the values that they receive ; then the bind operator controls the returned monadic values (ex: it can enrich them outside of the view of these chained functions) and the next calls (ex: it can make them conditional).</p>
+<p>So a monad of type <tt class="docutils literal">M t</tt> is an algebraic datatype that derives from type <tt class="docutils literal">t</tt>.</p>
+<p>The elements of the monadic triplet shall respect following 3 axioms, <tt class="docutils literal">return</tt> behaving like a neutral element from <tt class="docutils literal">&gt;&gt;=</tt>:</p>
+<ul class="simple">
+<li>left composition by <tt class="docutils literal">return</tt>, with: <tt class="docutils literal">(return x) &gt;&gt;= f&nbsp; ≡&nbsp; f x</tt></li>
+<li>right composition by <tt class="docutils literal">return</tt>, with: <tt class="docutils literal">m &gt;&gt;= return&nbsp; ≡&nbsp; m</tt></li>
+<li>associativity of bind, with: <tt class="docutils literal">(m &gt;&gt;= f) &gt;&gt;= g&nbsp; ≡&nbsp; m &gt;&gt;= \x . (f x &gt;&gt;= g)</tt></li>
+</ul>
+<p>Refer to <a class="reference external" href="https://en.wikipedia.org/wiki/Monad_(functional_programming)">this article</a> for more information.</p>
+</div>
+<div class="section" id="in-a-nutshell">
+<h3><a class="toc-backref" href="#id56">In a Nutshell</a></h3>
+<p>A monad <tt class="docutils literal">M</tt> defines a type that represents a processing and is associated to two operators:</p>
+<ul class="simple">
+<li><tt class="docutils literal">return</tt>: to encapsulate a value of type <tt class="docutils literal">t</tt> in this monad (resulting in a monadic value <tt class="docutils literal">M t</tt>)</li>
+<li>bind, i.e. <tt class="docutils literal">&gt;&gt;=</tt>: to compose monadic functions</li>
+</ul>
+</div>
+<div class="section" id="examples">
+<h3><a class="toc-backref" href="#id57">Examples</a></h3>
+<p>The <tt class="docutils literal">IO</tt> monad is probably the most well-known monad. <tt class="docutils literal">IO t</tt> represents an imperative program taking no parameter and returning a value of type <tt class="docutils literal">t</tt>.</p>
+<p>For example:</p>
+<ul class="simple">
+<li><tt class="docutils literal">IO ()</tt> denotes, with the empty tuple <tt class="docutils literal">()</tt>, a program returning no specific value (akin to <tt class="docutils literal">void</tt> in some languages)</li>
+<li>the <tt class="docutils literal"><span class="pre">getLine``function</span> is of type ``IO String</tt>, it returns the string entered on the keyboard by the user</li>
+</ul>
+<p>A second example is the one of <tt class="docutils literal">Maybe</tt>, as taken from <a class="reference external" href="https://en.wikipedia.org/wiki/Monad_(functional_programming)#An_example:_Maybe">this article</a></p>
+<p>The Maybe-type (so here <tt class="docutils literal">M = Maybe</tt>) is: <tt class="docutils literal">Maybe t :: Just t | Nothing</tt></p>
+<p>The Maybe-return is:</p>
+<pre class="code haskell literal-block">
+<span class="nf">return</span> <span class="ow">::</span> <span class="n">t</span> <span class="ow">-&gt;</span> <span class="kt">Maybe</span> <span class="n">t</span>
+<span class="nf">return</span> <span class="n">undefined</span> <span class="ow">=</span> <span class="kt">Nothing</span>
+<span class="nf">return</span> <span class="kt">O</span> <span class="ow">-&gt;</span> <span class="kt">Just</span> <span class="kt">O</span>
+</pre>
+<p>The Maybe-bind is:</p>
+<pre class="code haskell literal-block">
+<span class="p">(</span><span class="o">&gt;&gt;=</span><span class="p">)</span> <span class="ow">::</span> <span class="kt">Maybe</span> <span class="n">t</span> <span class="ow">-&gt;</span> <span class="p">(</span> <span class="n">t</span> <span class="ow">-&gt;</span> <span class="kt">Maybe</span> <span class="n">u</span> <span class="p">)</span> <span class="ow">-&gt;</span> <span class="kt">Maybe</span> <span class="n">u</span>
+<span class="kt">Nothing</span>   <span class="p">```</span><span class="o">&gt;&gt;=</span><span class="p">```</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">Nothing</span>
+<span class="p">(</span><span class="kt">Maybe</span> <span class="n">a</span><span class="p">)</span> <span class="p">```</span><span class="o">&gt;&gt;=</span><span class="p">```</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">Just</span><span class="p">(</span> <span class="n">f</span> <span class="n">a</span> <span class="p">)</span>
+</pre>
+<p>The Maybe monad allows to handle errors: as soon as a function call fails, the next binds short-circuit the processing rather than letting the next functions be evaluated in turn.</p>
+<p>A third example is <tt class="docutils literal">seqn</tt>, to transform a list of actions with side-effects (ex: IO) returning a result of type <tt class="docutils literal">a</tt> into a single of such action:</p>
+<pre class="code haskell literal-block">
+<span class="nf">seqn</span> <span class="ow">::</span> <span class="kt">Monad</span> <span class="n">m</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">m</span> <span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">m</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="nf">seqn</span> <span class="kt">[]</span>         <span class="ow">=</span> <span class="n">return</span> <span class="kt">[]</span>
+<span class="nf">seqn</span> <span class="p">(</span><span class="n">act</span><span class="kt">:</span><span class="n">acts</span><span class="p">)</span> <span class="ow">=</span> <span class="kr">do</span> <span class="n">x</span> <span class="ow">&lt;-</span> <span class="n">act</span>    <span class="c1">-- *performs* this 'act' action</span>
+                          <span class="n">xn</span> <span class="ow">&lt;-</span> <span class="n">seqn</span> <span class="n">acts</span>
+                          <span class="n">return</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="properties">
+<h3><a class="toc-backref" href="#id58">Properties</a></h3>
+<ul class="simple">
+<li>any monad can be characterized as an adjunction between two (covariant) functors</li>
+<li>the monad as defined in category theory has been applied to functional programming, in order to provide semantics for the lambda calculus</li>
+</ul>
+</div>
+<div class="section" id="interest">
+<h3><a class="toc-backref" href="#id59">Interest</a></h3>
+<ul class="simple">
+<li>as monadic values represent explicitly not only computed values but also the effects that these evaluations trigger, a monadic expression can be freely replaced by its value (referential transparency), which enables the use of various optimisation approaches based on rewriting</li>
+<li>a monad captures, centralises and unifies once for all recurring schemes to integrate <a class="reference internal" href="#id11">side effects</a> that would be otherwise more difficult to handle (ex: with CPS, <a class="reference external" href="https://en.wikipedia.org/wiki/Continuation-passing_style">Continuation-Passing Style</a></li>
+<li>monads may register additional data that are inaccessible from functions and/or may drive their execution (ex: conditional call)</li>
+<li>monads may favour aspect-oriented programming, in the sense that they allow the developer to focus on his domain-specific logic (as the binding code, provided by the monad, is defined separately - and once for all)</li>
+</ul>
+</div>
+<div class="section" id="usages">
+<h3><a class="toc-backref" href="#id60">Usages</a></h3>
+<ul class="simple">
+<li>to condense code and to tie it to a mathematical formulation (compilation-time version of the &quot;decorator pattern&quot;</li>
+<li>to facilitate static analysis and program proofs</li>
+<li>to support the definition of simple DSL (<em>Domain-Specific Languages</em>) and to combine parsing rules</li>
+<li>to support the traversal of datastructures (see <a class="reference external" href="https://en.wikipedia.org/wiki/Zipper_(data_structure)">zipper</a>)</li>
+<li>to transform complicated sequences of function calls into a compact pipeline abstracting out the management of additional data, flow control and <a class="reference internal" href="#side-effects">side-effects</a></li>
+<li>to rely on call-by-need</li>
+<li>to allow for optimisations such as:<ul>
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/Deforestation_(computer_science)">deforestation</a> (a.k.a. fusion or &quot;tree suppression&quot;): a program transformation to eliminate intermediate lists or tree structures that are created and then immediately consumed by a program</li>
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/Memoization">memoisation</a>: the caching of results of function calls in order to compute them once</li>
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/Parallel_computing">parallelisation</a>: to split a program between multiple logical processes</li>
+<li>strong reduction: when β-reduction in the λ-calculus are also performed on function bodies</li>
+</ul>
+</li>
+</ul>
+<p>See also this <a class="reference external" href="https://en.wikipedia.org/wiki/Monad_(functional_programming)#Applications">section</a> about monad applications.</p>
+</div>
+</div>
+<div class="section" id="lazy-evaluation">
+<h2><a class="toc-backref" href="#id61">Lazy Evaluation</a></h2>
+<p>Most languages perform strict, eager evaluation: to evaluate a function call, first each of the supplied argument is fully evaluated, then the function itself is evaluated, based on the values jst computed for its arguments.</p>
+<p>On the contrary, lazy evaluation strives to defer as much as possibly evaluations - possibly delaying up to the point of having never to perform them.</p>
+<p>Lazy evaluation is convenient to express higher-level programs (ex: handling infinite lists such as <tt class="docutils literal"><span class="pre">[1,...]</span></tt>), yet makes it harder to predict the behaviour of programs at least in terms of resource consumption (time, memory, etc.).</p>
+<p>For an increased control, strict evaluation can nevertheless be forced.</p>
+</div>
+<div class="section" id="arrows">
+<h2><a class="toc-backref" href="#id62">Arrows</a></h2>
+<p>An arrow (a.k.a. &quot;bolt&quot;) is a type class representing computations in a pure way; this monad generalisation allows to express the relationships between the logical steps of a processing.</p>
+<p>Refer to <a class="reference external" href="https://en.wikipedia.org/wiki/Arrow_(computer_science)">this article</a> for more information.</p>
+</div>
+<div class="section" id="id21">
+<span id="lambda-calculus"></span><h2><a class="toc-backref" href="#id63">Lambda Calculus</a></h2>
+<p>The lambda calculus is a simple yet powerful theory of functions. Its basis is to consider that all program elements are functions. An expression may include functions that are not yet defined and that are then considered as variables.</p>
+<p>This is a formal system designed by Alonzo Church in the 1930s to define the concepts of function and (function) application. It relies on λ-expressions, where λ denotes the binding of a variable. For example, if <tt class="docutils literal">M</tt> is a λ-expression, then <tt class="docutils literal">λx.M</tt> is also one, and represents the function that to the <tt class="docutils literal">x</tt> variable associates <tt class="docutils literal">M</tt> (i.e. <tt class="docutils literal">\x <span class="pre">-&gt;</span> M x</tt> here).</p>
+<p>The λ-calculus has been the first formalism defining and characterising the recursive functions, and as such is essential to the theory of computing.</p>
+<p>It is used as theoretical programming language and also as metalanguage for formal proof.</p>
+<p>λ-calculus may or may not be typed.</p>
+<p>Refer to <a class="reference external" href="https://en.wikipedia.org/wiki/Lambda_calculus">this article</a> for more information.</p>
+</div>
+</div>
+<div class="section" id="haskell-syntax">
+<h1><a class="toc-backref" href="#id64">Haskell Syntax</a></h1>
+<div class="section" id="reserved-words">
+<h2><a class="toc-backref" href="#id65">Reserved Words</a></h2>
+<p>They cannot be used to name functions or variables:</p>
+<pre class="literal-block">
+case, class, data, deriving, do, else, if, import,
+in, infix, infixl, infixr, instance, let, of, module,
+newtype, then, type, where
+</pre>
+</div>
+<div class="section" id="comments">
+<h2><a class="toc-backref" href="#id66">Comments</a></h2>
+<p>A single-line comment starts with <tt class="docutils literal"><span class="pre">--</span></tt> and extends to the end of the line.</p>
+<p>Multi-line comments start with <tt class="docutils literal">{-</tt> and extend to <tt class="docutils literal"><span class="pre">-}</span></tt>.</p>
+<p>Example:</p>
+<pre class="code haskell literal-block">
+<span class="nf">size</span> <span class="ow">=</span> <span class="mi">3</span>  <span class="c1">-- This is a constant here.</span>
+
+<span class="cm">{- Comments are essential for understanding.
+
+   Consider writing them.
+
+
+ -}</span>
+</pre>
+<p>Comments can be nested.</p>
+<p>See also the comment conventions for the <a class="reference internal" href="#haddock-documentation-generator">Haddock documentation generator</a>.</p>
+<p id="literate-haskell"><a class="reference external" href="https://wiki.haskell.org/Literate_programming">Literate programming</a> (where text is by default a comment, unless being specifically designated as code) is possible in an Haskell script, whose extension shall then be <tt class="docutils literal">.lhs</tt> (for Literate Haskell).</p>
+</div>
+</div>
+<div class="section" id="haskell-tools">
+<h1><a class="toc-backref" href="#id67">Haskell Tools</a></h1>
+<div class="section" id="glasgow-haskell-tools">
+<h2><a class="toc-backref" href="#id68">Glasgow Haskell Tools</a></h2>
+<p>They include a compiler (<tt class="docutils literal">GHC</tt>) and an interpreter (<tt class="docutils literal">GHCi</tt>).</p>
+</div>
+<div class="section" id="haddock-a-haskell-documentation-tool">
+<span id="haddock-documentation-generator"></span><h2><a class="toc-backref" href="#id69">Haddock: a Haskell Documentation Tool</a></h2>
+<p><a class="reference external" href="https://www.haskell.org/haddock/">Haddock</a> generates documentation from annotated Haskell source code (typically libraries).</p>
+<p>So that they are taken into account by Haddock, comments above function definitions should start with <tt class="docutils literal">{- |</tt>, and those next to parameter types with <tt class="docutils literal"><span class="pre">--</span> ^</tt>.</p>
+<p>Example of use:</p>
+<pre class="code haskell literal-block">
+<span class="c1">-- |The 'square' function squares an integer.</span>
+<span class="c1">-- It takes one argument, of type 'Int'. square :: Int -&gt; Int</span>
+<span class="nf">square</span> <span class="n">x</span> <span class="ow">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+
+<span class="cm">{-|
+ The 'cube' function cubes an integer.
+ It takes one argument, of type 'Int'.
+ -}</span>
+<span class="nf">cube</span> <span class="n">x</span> <span class="ow">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">square</span> <span class="n">x</span>
+
+<span class="kr">data</span> <span class="kt">T</span> <span class="n">a</span> <span class="n">b</span>
+  <span class="ow">=</span> <span class="kt">C1</span> <span class="n">a</span> <span class="n">b</span>  <span class="c1">-- ^ This is the documentation for the 'C1' constructor</span>
+  <span class="o">|</span> <span class="kt">C2</span> <span class="n">a</span> <span class="n">b</span>  <span class="c1">-- ^ This is the documentation for the 'C2' constructor</span>
+</pre>
+<p>See <a class="reference external" href="https://haskell-haddock.readthedocs.io/en/latest/markup.html">this page</a> for more information regarding markup.</p>
+</div>
+</div>
+<div class="section" id="haskell-conventions">
+<h1><a class="toc-backref" href="#id70">Haskell Conventions</a></h1>
+<div class="section" id="index">
+<h2><a class="toc-backref" href="#id71">Index</a></h2>
+<p>They start at zero:</p>
+<pre class="code haskell literal-block">
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">!!</span> <span class="mi">1</span> <span class="ow">=</span> <span class="mi">2</span>
+</pre>
+</div>
+<div class="section" id="whitespaces">
+<h2><a class="toc-backref" href="#id72">Whitespaces</a></h2>
+<p>One should avoid tabulations (i.e. prefer spaces).</p>
+<p>Generally the least number of spaces is preferred; like in: <tt class="docutils literal">sum $ map sqrt <span class="pre">[1..10]</span></tt>.</p>
+</div>
+<div class="section" id="naming">
+<h2><a class="toc-backref" href="#id73">Naming</a></h2>
+<p>The names of functions and arguments start with a lowercase character and are followed by any number of: numbers, letters (of any case), underscores and single quotes.</p>
+<p>The names of types and constructors start with an uppercase letter.</p>
+</div>
+<div class="section" id="shortness">
+<h2><a class="toc-backref" href="#id74">Shortness</a></h2>
+<p>Most Haskell developers seem to strongly dislike typing, often resulting in cryptic names for functions (ex: <tt class="docutils literal">fst</tt>) and variable names (often reduced to a single character whose meaning is never disclosed).</p>
+<p>A lot of efforts went especially to save keystrokes and more precisely to remove as much as possible the need for parentheses (function application being denoted as a space, the <tt class="docutils literal">.</tt> and <tt class="docutils literal">$</tt> operators being introduced, etc.). This allows very compact definitions of functions out of functions (ellipsing values as such), and an increased expressivity, sometimes at the expense of clarity. Extra documentation may alleviate this problem.</p>
+<p>Single-letter variable names often denote their type (ex: <tt class="docutils literal">c</tt> for a <tt class="docutils literal">Char</tt> variable), and are suffixed by <tt class="docutils literal">s</tt> to indicate this is a list thereof (ex: <tt class="docutils literal">bs</tt> for a variable of type <tt class="docutils literal">[Bool]</tt>, <tt class="docutils literal">css</tt> for  a <tt class="docutils literal">[[Char]]</tt> one).</p>
+</div>
+<div class="section" id="layout-indentation">
+<h2><a class="toc-backref" href="#id75">Layout &amp; Indentation</a></h2>
+<p>Indentation matters, as spaces denote scopes:</p>
+<pre class="code haskell literal-block">
+<span class="nf">a</span> <span class="ow">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+ <span class="kr">where</span>
+  <span class="n">b</span> <span class="ow">=</span> <span class="mi">1</span>
+  <span class="n">c</span> <span class="ow">=</span> <span class="mi">2</span>
+
+<span class="nf">d</span> <span class="ow">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span>
+</pre>
+<p>An alternative layout based on curly braces and semi-colons exists, yet its use is discouraged.</p>
+<p>A function body shall be indented of at least one space compared to the function name (if indented at all).</p>
+<p>As any <tt class="docutils literal">where</tt> or <tt class="docutils literal">let</tt> use must be, indentation-wise, between the name and the body of a function, we prefer, compared to the function name:</p>
+<ul class="simple">
+<li>a 2-space indentation for the body</li>
+<li>a 1-space indentation for <tt class="docutils literal">where</tt> / <tt class="docutils literal">let</tt> body</li>
+</ul>
+<p>For example:</p>
+<pre class="code haskell literal-block">
+<span class="nf">square</span> <span class="n">x</span> <span class="ow">=</span>
+  <span class="n">sq</span>
+ <span class="kr">where</span> <span class="n">sq</span> <span class="ow">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+</pre>
+</div>
+</div>
+<div class="section" id="haskell-in-practice">
+<h1><a class="toc-backref" href="#id76">Haskell In Practice</a></h1>
+<div class="section" id="installing-haskell">
+<h2><a class="toc-backref" href="#id77">Installing Haskell</a></h2>
+<p>On Arch Linux (see <a class="reference external" href="https://wiki.archlinux.org/title/haskell">this page</a> for more information): <tt class="docutils literal">pacman <span class="pre">-Sy</span> ghc <span class="pre">cabal-install</span> stack</tt>.</p>
+<p>See also our corresponding script <a class="reference external" href="https://github.com/Olivier-Boudeville/Ceylan-Curry/blob/main/.github/workflows/curry-ci.yml">for continuous integration</a>.</p>
+</div>
+<div class="section" id="running-haskell">
+<h2><a class="toc-backref" href="#id78">Running Haskell</a></h2>
+<p>Except for performances, programs can be tested directly with <tt class="docutils literal">ghci</tt>, like in:</p>
+<pre class="literal-block">
+$ ghci Foobar.hs
+</pre>
+<p>The very essential <a class="reference external" href="https://typeclasses.com/ghci/commands">GHCi commands</a> are:</p>
+<ul class="simple">
+<li><tt class="docutils literal">:?</tt> or <tt class="docutils literal">:help</tt>: lists available commands</li>
+<li><tt class="docutils literal">:load FILENAME</tt>: loads specified script</li>
+<li><tt class="docutils literal">:reload</tt> or <tt class="docutils literal">:r</tt>: reloads the current module, file, or project</li>
+<li><tt class="docutils literal">:</tt>: repeats the previous command</li>
+<li><tt class="docutils literal">:type</tt> or <tt class="docutils literal">:t</tt>: returns the type of specified expression (value or function); ex: <tt class="docutils literal">:t not False</tt></li>
+<li><tt class="docutils literal">set editor NAME</tt>: sets the code editor to NAME</li>
+<li><tt class="docutils literal">edit FILENAME</tt>: edits specified script</li>
+<li><tt class="docutils literal">edit</tt>: edits current script</li>
+<li><tt class="docutils literal">:quit</tt> or <tt class="docutils literal"><span class="pre">CTRL-D</span></tt>: quits the interpreter</li>
+</ul>
+<p>For example:</p>
+<pre class="code haskell literal-block">
+<span class="o">$</span> <span class="n">ghci</span>
+<span class="kt">GHCi</span><span class="p">,</span> <span class="n">version</span> <span class="mf">8.10</span><span class="o">.</span><span class="mi">5</span><span class="kt">:</span> <span class="n">https</span><span class="kt">://</span><span class="n">www</span><span class="o">.</span><span class="n">haskell</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ghc</span><span class="o">/</span>  <span class="kt">:?</span> <span class="n">for</span> <span class="n">help</span>
+
+<span class="kt">Prelude</span><span class="o">&gt;</span> <span class="kt">:</span><span class="kr">type</span> <span class="n">not</span>
+<span class="nf">not</span> <span class="ow">::</span> <span class="kt">Bool</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+</pre>
+<p>Functions can be directly redefined:</p>
+<pre class="code haskell literal-block">
+<span class="kt">Prelude</span><span class="o">&gt;</span> <span class="n">fac</span> <span class="n">n</span> <span class="ow">=</span> <span class="n">product</span> <span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="n">n</span><span class="p">]</span>
+<span class="kt">Prelude</span><span class="o">&gt;</span> <span class="n">fac</span> <span class="mi">5</span>
+<span class="mi">120</span>
+
+<span class="kt">Prelude</span><span class="o">&gt;</span> <span class="n">fac</span> <span class="kr">_</span> <span class="ow">=</span> <span class="mi">0</span>
+<span class="kt">Prelude</span><span class="o">&gt;</span> <span class="n">fac</span> <span class="mi">5</span>
+<span class="mi">0</span>
+</pre>
+</div>
+<div class="section" id="haskell-related-filenames">
+<h2><a class="toc-backref" href="#id79">Haskell-related Filenames</a></h2>
+<div class="section" id="filenames">
+<h3><a class="toc-backref" href="#id80">Filenames</a></h3>
+<p>They may or may not start with a capital letter (and no specified convention applies).</p>
+<p>They may be in snake_case or in CamelCase.</p>
+<p>Ex: <tt class="docutils literal">my_test.hs</tt>, <tt class="docutils literal">HelloWorld.hs</tt>.</p>
+</div>
+<div class="section" id="extensions">
+<h3><a class="toc-backref" href="#id81">Extensions</a></h3>
+<p>The main extensions are:</p>
+<ul class="simple">
+<li><tt class="docutils literal">.hs</tt>: Haskell source code (to preprocess then compile)</li>
+<li><tt class="docutils literal">.lhs</tt>: <a class="reference internal" href="#literate-haskell">literate Haskell</a> source (to unlit, preprocess and compile), where all text is comment by default, and code is specifically designated as such</li>
+<li><tt class="docutils literal">.hi</tt>: interface file; contains information about exported symbols</li>
+<li><tt class="docutils literal">.hc</tt>: intermediate C files</li>
+</ul>
+<p>A very basic <tt class="docutils literal">Foobar.hs</tt> source file once compiled results in a standard <tt class="docutils literal">Foobar.o</tt> object file, typically:</p>
+<pre class="literal-block">
+ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), not stripped
+</pre>
+<p>If <tt class="docutils literal">Foobar.hs</tt> defines a suitable <tt class="docutils literal">main</tt> function, once linked it results in a standard <tt class="docutils literal">Foobar.o</tt> executable, typically (depending on the build options):</p>
+<pre class="literal-block">
+ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 4.4.0, BuildID[sha1]=[...], not stripped
+</pre>
+<p>In terms of shared libraries, this boils down to, for example:</p>
+<pre class="literal-block">
+linux-vdso.so.1
+libHSbase-4.14.2.0-ghc8.10.5.so =&gt; /usr/lib/ghc-8.10.5/base-4.14.2.0/libHSbase-4.14.2.0-ghc8.10.5.so
+libHSinteger-gmp-1.0.3.0-ghc8.10.5.so =&gt; /usr/lib/ghc-8.10.5/integer-gmp-1.0.3.0/libHSinteger-gmp-1.0.3.0-ghc8.10.5.so
+libHSghc-prim-0.6.1-ghc8.10.5.so =&gt; /usr/lib/ghc-8.10.5/ghc-prim-0.6.1/libHSghc-prim-0.6.1-ghc8.10.5.so
+libHSrts-ghc8.10.5.so =&gt; /usr/lib/ghc-8.10.5/rts/libHSrts-ghc8.10.5.so
+libgmp.so.10 =&gt; /usr/lib/libgmp.so.10
+libc.so.6 =&gt; /usr/lib/libc.so.6
+libm.so.6 =&gt; /usr/lib/libm.so.6
+librt.so.1 =&gt; /usr/lib/librt.so.1
+libdl.so.2 =&gt; /usr/lib/libdl.so.2
+libffi.so.7 =&gt; /usr/lib/libffi.so.7
+libpthread.so.0 =&gt; /usr/lib/libpthread.so.0
+/lib64/ld-linux-x86-64.so.2 =&gt; /usr/lib64/ld-linux-x86-64.so.2
+</pre>
+</div>
+</div>
+<div class="section" id="build-system">
+<h2><a class="toc-backref" href="#id82">Build System</a></h2>
+<p>One may rely on the <a class="reference external" href="https://github.com/Olivier-Boudeville/Ceylan-Curry">Haskell transposition</a> of our simple, usual make-based build system (refer to the <tt class="docutils literal">GNUmake*</tt> files; see <a class="reference external" href="https://myriad.esperide.org/#general-build-structure">this section</a> of our Erlang-based Myriad counterpart for more details).</p>
+</div>
+</div>
+<div class="section" id="haskell-resources">
+<h1><a class="toc-backref" href="#id83">Haskell Resources</a></h1>
+<div class="section" id="to-learn">
+<h2><a class="toc-backref" href="#id84">To Learn</a></h2>
 <p>We would certainly recommend browsing the pleasant <a class="reference external" href="http://learnyouahaskell.com/">Learn You a Haskell for Great Good!</a> website or, even better, buying their book; another worthwhile book is <em>Programming in Haskell</em>, whose author is Graham Hutton, that we found interesting and well-written as well.</p>
 <p>Of course the <a class="reference external" href="https://www.haskell.org/">official Haskell website</a> is also of interest.</p>
 </div>
+<div class="section" id="cheat-sheets">
+<h2><a class="toc-backref" href="#id85">Cheat Sheets</a></h2>
+<p>See <a class="reference external" href="https://cheatsheet.codeslower.com/">Justin Bailey's one</a>.</p>
+</div>
+</div>
 <div class="section" id="support">
-<h1><a class="toc-backref" href="#id8">Support</a></h1>
+<h1><a class="toc-backref" href="#id86">Support</a></h1>
 <p>Bugs, questions, remarks, patches, requests for enhancements, etc. are to be reported to the <a class="reference external" href="https://github.com/Olivier-Boudeville/Ceylan-Curry">project interface</a> (typically <a class="reference external" href="https://github.com/Olivier-Boudeville/Ceylan-Curry/issues">issues</a>) or directly at the email address mentioned at the beginning of this cookbook.</p>
 </div>
 <div class="section" id="please-react">
-<h1><a class="toc-backref" href="#id9">Please React!</a></h1>
+<span id="contact"></span><h1><a class="toc-backref" href="#id87">Please React!</a></h1>
 <p>If you have information more detailed or more recent than those presented in this document, if you noticed errors, neglects or points insufficiently discussed, drop us a line! (for that, follow the <a class="reference internal" href="#support">Support</a> guidelines).</p>
 </div>
 <div class="section" id="ending-word">
-<h1><a class="toc-backref" href="#id10">Ending Word</a></h1>
-<p>Have fun with Ceylan-Curry!</p>
+<h1><a class="toc-backref" href="#id88">Ending Word</a></h1>
+<p>Have fun with Haskell and functional programming!</p>
 <p><span class="raw-html"><center><img src="curry-title.png" id="responsive-image-small"></img></center></span>
 </p>
 <p><span class="raw-html"><a name="curry_bottom"></a></span></p>
