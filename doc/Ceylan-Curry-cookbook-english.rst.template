@@ -61,7 +61,7 @@ The latest version of this documentation is to be found at the `official Curry w
 
 
 .. contents:: **Table of Contents**
-  :depth: 3
+  :depth: 4
 
 
 :raw-latex:`\pagebreak`
@@ -75,19 +75,901 @@ The purpose of this `Curry <http://curry.esperide.org/>`_ cookbook is to help ne
 
 .. [#] This cookbook is in some way a Haskell counterpart of what we did for Erlang, with the software stack whose first layer is `Ceylan-Myriad <https://myriad.esperide.org>`_.
 
-More precisely, this cookbook is to summarise the various elements that we found useful to remember when wanting to program in Haskell whereas either one never really practiced that art or already forgot essential elements of it.
+More precisely, this cookbook is to summarise the various elements that we found useful to remember when wanting to program in Haskell. We hope that it may be useful whereas either one never really practiced that art or already forgot essential elements of it.
 
-So the goal of Curry is to be quicker to read/browse than it would be to start the learning again from scratch and never reaching the latter parts thereof (knowing that the learning curve of Haskell is unfortunately rather steep).
+So the goal of Curry is to be quicker to read/browse than it would be to start the learning again from scratch, and never reaching the latter parts thereof (knowing that the learning curve of Haskell is unfortunately rather steep).
+
+.. Note:: As this cookbook is being written as we are in the process of learning Haskell, errors, misconceptions and epic blunders are bound to occur in this text; if you detect such issues, please contact_ us so that we can correct this document accordingly. Thanks in advance!
+
+
+--------------------
+Cookbook Conventions
+--------------------
+
+The ``≡`` character denotes here equivalence of expressions; ex: ``2 * x  ≡  x + x``.
+
+For clarity, the formal characters like λ, ≫ and → are replaced by the one that you would type (namely ``\``, ``>>`` and ``->``).
 
 
 
-------------------
-Teaching Resources
-------------------
 
-We would certainly recommend browsing the pleasant `Learn You a Haskell for Great Good! <http://learnyouahaskell.com/>`_ website or, even better, buying their book; another worthwhile book is *Programming in Haskell*, whose author is Graham Hutton, that we found interesting and well-written as well.
+--------
+Concepts
+--------
 
-Of course the `official Haskell website <https://www.haskell.org/>`_ is also of interest.
+
+.. _FP:
+
+Functional Programming (FP)
+===========================
+
+A programming style based on the application of functions (`more information <https://en.wikipedia.org/wiki/Functional_programming>`_).
+
+
+
+Arity
+=====
+
+The (maximal) number of arguments expected by a function.
+
+
+Expressions
+===========
+
+- conditional ones: if/then/else (ex: ``if n >= 0 then n else -n``)
+- guarded: ``|`` can be read as "when (some condition is true)"; knowing that ``otherwise = True`` allows to define default clauses
+- lambda expressions are just anonymous functions; ex: ``\x -> 4 + 2*x``
+
+
+
+
+Operators
+=========
+
+
+Operator Precedence
+-------------------
+
+Precedence allows to define the `order of the operations <https://en.wikipedia.org/wiki/Order_of_operations>`_.
+
+If the precedence of ``op1`` is higher than the one of ``op2``, then ``x op1 y op2 z`` shall be read as: ``(x op1 y) op2 z``.
+
+See the `precedence table <https://www.haskell.org/onlinereport/haskell2010/haskellch4.html#x10-820004.4.2>`_ for all Haskell operators.
+
+By using the ``:info`` GHCi command, the precedence levels of operators can be returned:
+
+.. code:: haskell
+
+ Prelude> :info +
+ type Num :: * -> Constraint
+ class Num a where
+   (+) :: a -> a -> a
+   ...
+	 -- Defined in ‘GHC.Num’
+ infixl 6 +
+
+
+
+Operator Associativity
+----------------------
+
+This determines `how operators of the same precedence are grouped in the absence of parentheses <https://en.wikipedia.org/wiki/Operator_associativity>`_.
+
+
+.. _associative:
+.. _`left-associative`:
+.. _`right-associative`:
+
+Operators may be:
+
+- **associative**, meaning the operations can be grouped arbitrarily
+- **left-associative**, meaning the operations are grouped from the left: ``2-3+4 = (2-3)+4``
+- **right-associative**, meaning the operations are grouped from the right: ``2^3^4 = 2^(3^4)``
+- **non-associative**, meaning operations cannot be chained, often because the output type is incompatible with the input types
+
+
+
+Operator Calls
+--------------
+
+Operators are just functions that can be called:
+
+- either directly: ``op1 x`` or ``op2 x y``; for example: ``(-x)`` or ``(+) x 4``
+- or, for the ones of arity 2, as infix operators: ``x `op2` y  ≡  op2 x y``
+
+
+
+
+Some Operators of Interest
+--------------------------
+
+
+
+.. _`function application`:
+
+Calling functions: the " " (pseudo-)operator
+_______________________________________________
+
+
+Being central in FP_, **function application** is symbolised just by a space.
+
+It behaves as the operator of the highest precedence; therefore ``f a + b  ≡  (f a) + b``
+
+(rather than ``f (a + b)``) [#]_.
+
+.. [#] Another example: an expression that could be described informally as ``f(a,b) + c.d`` translates in Haskell as ``f a b + c*d`` or ``((f a) b) + c*d"``.
+
+This pseudo-operator is left-associative_: ``f g h  ≡  ((f g) h)``.
+
+``f g x`` corresponds to the application of a function ``g`` and of a variable ``x`` at ``f`` (i.e. ``f(g,x)``); if wanting to express ``f(g(x))``, rely on ``f (g x)`` or, even better, on ``f.g x``.
+
+
+
+Consing lists: the ":" operator
+_______________________________
+
+This operator, named ``cons`` (for *construct*), allows to define lists by appending successively elements, starting from the empty list (``[]``; designated as ``nil``).
+
+The ``:`` operator is right-associative_::
+
+ x:y:z:l  ≡  x:(y:(z:l))
+
+Example:
+
+.. code:: haskell
+
+ [4,5,3] = 4:5:3:[]
+
+
+
+.. _`function arrow`:
+
+Function Arrow: the "->" operator
+_________________________________
+
+It allows to specify the datatypes involved in the type definition of a function.
+
+This operator is right-associative_::
+
+ A -> B -> C ->  ≡  A -> (B -> (C -> D))
+
+Example:
+
+.. code:: haskell
+
+ -- mult :: Int -> (Int -> (Int -> Int))
+ mult :: Int -> Int -> Int -> Int
+
+ -- mult x y z = ((mult x) y) z
+ mult x y z = x*y*z
+
+
+
+Composition: the "." operator
+_____________________________
+
+
+
+Non-Binding Function Application: the "$" operator
+__________________________________________________
+
+The ``$`` operator is another way, besides the usual `function application`_ (denoted by a space) , of applying arguments to a function.
+
+This is the operator of least precedence. It has been introduced in order to further avoid the use of parentheses::
+
+ a $ b op c  ≡  a (b op c)
+
+
+When a ``$`` is encountered, the expression on its right is applied as the argument to the function on its left, as if a virtual parenthesis was opened there, and a closing one added at the end of the expression.
+
+This operator is right-associative_: ``f $ g $ h  ≡  (f $ (g $ h))``.
+
+So this operator is the "opposite" of the base `function application`_ in terms of precedence and associativity - but otherwise is the same in terms of definition (including typing):
+
+.. code:: haskell
+
+ ($) :: (a -> b) -> a -> b
+ f $ x = f x
+
+
+
+.. _function:
+
+Function
+========
+
+An association from a set of arguments to a set of corresponding results.
+
+.. code:: haskell
+
+ double x = 2*x
+
+ sum :: Num a => [a] -> a
+ sum []     = 0
+ sum (n:ns) = n + sum ns
+
+
+A function may not be defined for all (well-typed) combinations of its arguments.
+
+For example ``head []`` is to throw an exception.
+
+A function is a value like the other datatypes (first-class citizen).
+
+Thanks to the `algebraic datatypes <https://en.wikipedia.org/wiki/Algebraic_data_type>`_ such as lists and tuples, a function may take and return an arbitrary number of values (thus including functions).
+
+A function may be only **partially applied**: its last argument(s) may not specified in a given call. Then the value of the overall expression is a function of these remaining, unspecified arguments.
+
+For example, if ``f :: (Int,Float) -> Bool`` then ``f 3 :: Float -> Bool``.
+
+
+By default functions are polymorphic, insofar as they will accept all types determined as compatible. For example ``zip :: [a] -> [b] -> [(a,b)]`` can handle any types for ``a`` and ``b``.
+
+Functions are defined from expressions and based on pattern matching, which operates on few possible patterns that are examined in turn, from top to bottom:
+
+- function application, like in::
+
+.. code:: haskell
+
+  (&&) :: Bool -> Bool -> Bool
+  True && b = b
+  False && _ = False
+
+- tuple patterns, like in::
+
+.. code:: haskell
+
+  fst :: (a,b) -> a
+  fst (x,_) = x
+
+- list patterns, like in::
+
+.. code:: haskell
+
+  tail :: [a] -> [a]
+  tail (_:xs) = xs
+
+The ‘_’ character acts as a "wildcard" (it matches any value).
+
+Note that a non-empty list is (a bit surprisingly) to be pattern-matched with ``(x:xs)`` and not ``[x:xs]``. For example:
+
+.. code:: haskell
+
+  product :: Num a => [a] -> a
+  product [] = 1
+  product (n:ns) = n * product ns
+
+
+The same name cannot be specified for two arguments to match when they are equal; a guard must be used for that. Finally pattern matching can operate on few possible patterns: function application, tuple and list ones, that's it.
+
+
+
+Currying
+========
+
+A function taking its arguments one by one (one at a time, from left to right), each time returning a function of a decremented arity, is said to be **curried**.
+
+Such 1-arity functions are those directly modelled by the `lambda calculus`_, an essential base of the functional languages.
+
+As the `function arrow`_ operator (``->``) is right associative_, the type of functions is preferably written as:
+
+.. code:: haskell
+
+ f :: TArg1 -> TArg2 -> ... -> TArgn -> TResult
+
+This corresponds to the following actual type:
+
+
+.. code:: haskell
+
+ f :: TArg1 -> ( TArg2 -> (... -> (TArgn -> TResult))...)
+
+
+Consequently, as their arguments are to be applied one by one from left to right, the `` `` operator (function application is represented by the space character) is right-associative::
+
+ f a1 a2 ... an  ≡  (((f a1) a2) ... an)
+
+
+Functions can thus all be seen as curried ones, and can also be directly transposed as lambda ones; for example the following definitions define the same function:
+
+.. code:: haskell
+
+ add :: Int -> Int -> Int
+ add x y = x + y
+
+ add :: Int -> (Int -> Int)
+ add = \x -> (\y -> x + y)
+
+
+In this latter form:
+
+- the type specification and the definition of the function respect the same structure: ``XXX -> (XXX -> XXX)``
+- the function is designated (on the left of the ``=`` sign) without listing its arguments (we have ``add =``, not ``add x y =``) [#]_
+
+- if the purpose of the function is to return another one, its intent is clearer once expressed as a lamdba function
+
+.. [#] This is certainly clearer yet, if no type specification is given, the arity of the function is only implicit then.
+
+
+.. _`side-effects`:
+
+Side Effects
+============
+
+They correspond to all the consequences that the evaluation of a code (program, function) incurs besides its returned value.
+
+Example:
+
+- writing content on file, or on the screen
+- reading from file or from the input devices (keyboard, mouse)
+- changing the state of a value accessible from outside of the function
+- sending a message to another process or through the network
+- drawing a random value
+
+These impure events are difficult to manage yet are generally necessary, as the purpose of a program is to trigger "interesting side-effects"; a strictly pure program would most probably have no actual use (except using time, processing resources and adding the possibility of failure).
+
+
+Typing
+======
+
+
+Notion of Type
+--------------
+
+A type is a set of associated values.
+
+``e :: T`` means that expression ``e`` is of type ``T``.
+
+Haskell infers types at compilation (static typing), which prevents to discover many problems [#]_ at runtime.
+
+.. [#] Of course other problems may occur; for example ``1 `div` 0`` is well-typed yet its execution will fail.
+
+Some expressions that could be successfully evaluated can nevertheless be rejected on type grounds (ex: ``if True then 1 else False``), but in practice it is hardly a problem.
+
+
+Algebraic Datatypes
+-------------------
+
+They are defined based on unions of values.
+
+For example, in:
+
+.. code:: haskell
+
+ data MyFirstType = FirstValue | SecondValue | FirstConstructor T
+
+``MyFirstType`` is the *name* of the type. ``FirstValue`` and ``SecondValue`` are (constructor) *values*.
+
+``FirstConstructor`` is a constructor, and ``T`` is a *type name* (not a constructor).
+
+Type and constructor names *can* be the same, as no ambiguity can occur.
+
+
+Polymorphic types can be defined:
+
+.. code:: haskell
+
+ data MySecondType a = ThirdValue | SecondConstructor a Int
+
+
+
+
+Basic Types
+-----------
+
+- monomorphic: ``Bool``, ``Char``, ``String :: [Char]``, ``Int``/``Integer``, ``Float``/``Double``
+- polymorphic: list, tuple, function
+
+
+Char
+____
+
+Example: ```a```.
+
+
+
+Tuple
+_____
+
+A tuple is a fixed-sized, possibly heterogenous container.
+
+Example:
+
+.. code:: haskell
+
+ ("I am a tuple", 2, True)
+
+
+List
+____
+
+
+Description
+***********
+
+A list is an arbitrary-sized, homogeneous container.
+
+Example:
+
+.. code:: haskell
+
+ l1 = [1.0, 7.0, 2.0]
+ l2 = []
+ l3 = [100..]
+ l4 = 1 : 2 : 3 : []
+
+
+
+List Comprehension
+******************
+
+Example:
+
+.. code:: haskell
+
+ u s = [toUpper c | c <- s]
+
+
+More information: `[1] <https://wiki.haskell.org/List_comprehension>`_.
+
+
+Folds
+*****
+
+Like the ``map``, the various folds encapsulate a classical recursion pattern.
+
+
+``foldr`` (``r`` for right fold) evaluates from right to left, uses a right-associative operator and is directly recursive:
+
+.. code:: haskell
+
+ foldr :: (a -> b -> b) -> b -> [a] -> b
+ foldr f v []    = v
+ foldr f v (x:xs)  = f x (foldr f v xs)
+
+
+``foldl`` (``l`` for left fold) evaluates from left to right, uses a left-associative operator and relies on an accumulator:
+
+.. code:: haskell
+
+ foldl :: (a -> b -> a) -> a -> [b] -> a
+ foldl f v []    = v
+ foldl f v (x:xs)  = foldl f (f v x) xs
+
+
+
+String
+______
+
+
+A string is nothing but a list of (Unicode) characters: ``String ≡ [Char]``.
+
+Example: ``"Hello!"`` or ```a`:`b`:`c`:[]``
+
+A string cannot spread over multiple lines directly; the backslash (``\``) character is needed for that:
+
+.. code:: haskell
+
+ s = "This is a unique \
+ \line."
+
+
+(any text between the two ``\`` is ignored)
+
+A newline is designated in a string by ``\n``.
+
+
+Function
+________
+
+See function_.
+
+
+Type Class
+----------
+
+A type class is a set of types that support a set of functions called ``methods``.
+
+For example the ``Eq`` class is to gather all types that can be compared for egality (or inegality), based on the following two methods:
+
+.. code:: haskell
+
+ (==) :: a -> a -> Bool
+ (/=) :: a -> a -> Bool
+
+
+A type may belong to one or more classes.
+
+Class constraints can be specified when typing a function. For example:
+
+.. code:: haskell
+
+ (+) :: Num a => a -> a -> a
+
+A type respecting at least one of such constraints is said *overloaded*, as is the corresponding expression.
+
+
+
+Monad
+=====
+
+
+Informal Descriptions
+---------------------
+
+Various intuitive descriptions of a monad apply:
+
+- a stateful datastructure representing some processing
+- an abstraction, a generic concept allowing to structure programs generically and to unify in a functional way various problems (to structure them and favour separation of concerns)
+- programmable ";" (semicolons whose effect can be defined)
+- a structure allowing to express imperative traits in functional languages, to convey notions like exceptions or side-effects_ while preserving their purity
+- a way of describing and composing impure expressions in a pure context: a monad is an expression still to be evaluated (potentially inducing then side-effects), yet able to be integrated in a pure context
+- the code source of an imperative program that, once executed, returns a value of a specified type and that can be chained with other programs taking and returning such values; the language handles then the imperative programs themselves (ex: their source) rather than the values they return
+
+
+
+More Formally
+-------------
+
+A monad M is a ``(type, return function, bind function)`` triplet with:
+
+- a monadic constructor: ``t -> M t``
+- a function named ``return`` that, through the previous constructor, allows to obtain, from a value of type ``a``, a value of monadic type ``M a``: ``return: t -> M t``
+- a function named ``bind`` that allows to compose a monadic function [#]_ with others, represented by the ``>>=`` infix operator so that: ``>>= :: M t -> ( t -> M u ) -> M u``
+
+.. [#] A monadic function is a function returning a monadic value.
+
+
+``Mt >>= f`` (i.e. "bind Mt f") allows to apply the f function to the value of type t encapsulated in ``Mt``; ``>>=`` drives the chaining of monadic functions (as such it handles functions, not values).
+
+By composing ``>>=`` with ``return``, any function ``g :: t -> t`` can be applied to a monad of type ``M t`` (here the types ``u`` and ``t`` in the definition of bind are the same).
+
+These functions (``f`` et ``g``) are only aware of the value (``t``) encapsulated in the monad, not the monad (``M t``) itself.
+
+So the developer composes a sequence of function calls (a pipeline) by chaining binds in an expression. Functions transform the values that they receive ; then the bind operator controls the returned monadic values (ex: it can enrich them outside of the view of these chained functions) and the next calls (ex: it can make them conditional).
+
+So a monad of type ``M t`` is an algebraic datatype that derives from type ``t``.
+
+The elements of the monadic triplet shall respect following 3 axioms, ``return`` behaving like a neutral element from ``>>=``:
+
+- left composition by ``return``, with: ``(return x) >>= f  ≡  f x``
+
+- right composition by ``return``, with: ``m >>= return  ≡  m``
+
+- associativity of bind, with: ``(m >>= f) >>= g  ≡  m >>= \x . (f x >>= g)``
+
+
+Refer to `this article <https://en.wikipedia.org/wiki/Monad_(functional_programming)>`_ for more information.
+
+
+
+In a Nutshell
+-------------
+
+A monad ``M`` defines a type that represents a processing and is associated to two operators:
+
+- ``return``: to encapsulate a value of type ``t`` in this monad (resulting in a monadic value ``M t``)
+- bind, i.e. ``>>=``: to compose monadic functions
+
+
+Examples
+--------
+
+The ``IO`` monad is probably the most well-known monad. ``IO t`` represents an imperative program taking no parameter and returning a value of type ``t``.
+
+For example:
+
+- ``IO ()`` denotes, with the empty tuple ``()``, a program returning no specific value (akin to ``void`` in some languages)
+- the ``getLine``function is of type ``IO String``, it returns the string entered on the keyboard by the user
+
+
+A second example is the one of ``Maybe``, as taken from `this article <https://en.wikipedia.org/wiki/Monad_(functional_programming)#An_example:_Maybe>`_
+
+The Maybe-type (so here ``M = Maybe``) is: ``Maybe t :: Just t | Nothing``
+
+The Maybe-return is:
+
+.. code:: haskell
+
+ return :: t -> Maybe t
+ return undefined = Nothing
+ return O -> Just O
+
+
+The Maybe-bind is:
+
+.. code:: haskell
+
+ (>>=) :: Maybe t -> ( t -> Maybe u ) -> Maybe u
+ Nothing   ```>>=``` f = Nothing
+ (Maybe a) ```>>=``` f = Just( f a )
+
+The Maybe monad allows to handle errors: as soon as a function call fails, the next binds short-circuit the processing rather than letting the next functions be evaluated in turn.
+
+
+A third example is ``seqn``, to transform a list of actions with side-effects (ex: IO) returning a result of type ``a`` into a single of such action:
+
+.. code:: haskell
+
+ seqn :: Monad m => [m a] -> m [a]
+ seqn []         = return []
+ seqn (act:acts) = do x <- act    -- *performs* this 'act' action
+						   xn <- seqn acts
+						   return (x:xs)
+
+
+
+
+
+Properties
+----------
+
+- any monad can be characterized as an adjunction between two (covariant) functors
+- the monad as defined in category theory has been applied to functional programming, in order to provide semantics for the lambda calculus
+
+
+Interest
+--------
+
+- as monadic values represent explicitly not only computed values but also the effects that these evaluations trigger, a monadic expression can be freely replaced by its value (referential transparency), which enables the use of various optimisation approaches based on rewriting
+
+- a monad captures, centralises and unifies once for all recurring schemes to integrate `side effects`_ that would be otherwise more difficult to handle (ex: with CPS, `Continuation-Passing Style <https://en.wikipedia.org/wiki/Continuation-passing_style>`_
+
+- monads may register additional data that are inaccessible from functions and/or may drive their execution (ex: conditional call)
+
+- monads may favour aspect-oriented programming, in the sense that they allow the developer to focus on his domain-specific logic (as the binding code, provided by the monad, is defined separately - and once for all)
+
+
+Usages
+------
+
+- to condense code and to tie it to a mathematical formulation (compilation-time version of the "decorator pattern"
+- to facilitate static analysis and program proofs
+- to support the definition of simple DSL (*Domain-Specific Languages*) and to combine parsing rules
+- to support the traversal of datastructures (see `zipper <https://en.wikipedia.org/wiki/Zipper_(data_structure)>`_)
+- to transform complicated sequences of function calls into a compact pipeline abstracting out the management of additional data, flow control and side-effects_
+- to rely on call-by-need
+- to allow for optimisations such as:
+
+  - `deforestation <https://en.wikipedia.org/wiki/Deforestation_(computer_science)>`_ (a.k.a. fusion or "tree suppression"): a program transformation to eliminate intermediate lists or tree structures that are created and then immediately consumed by a program
+  -  `memoisation <https://en.wikipedia.org/wiki/Memoization>`_: the caching of results of function calls in order to compute them once
+  - `parallelisation <https://en.wikipedia.org/wiki/Parallel_computing>`_: to split a program between multiple logical processes
+  - strong reduction: when β-reduction in the λ-calculus are also performed on function bodies
+
+See also this `section <https://en.wikipedia.org/wiki/Monad_(functional_programming)#Applications>`_ about monad applications.
+
+
+
+Lazy Evaluation
+===============
+
+Most languages perform strict, eager evaluation: to evaluate a function call, first each of the supplied argument is fully evaluated, then the function itself is evaluated, based on the values jst computed for its arguments.
+
+On the contrary, lazy evaluation strives to defer as much as possibly evaluations - possibly delaying up to the point of having never to perform them.
+
+Lazy evaluation is convenient to express higher-level programs (ex: handling infinite lists such as ``[1,...]``), yet makes it harder to predict the behaviour of programs at least in terms of resource consumption (time, memory, etc.).
+
+.. Refer to the laziness_ to better understand how it is implemented.
+
+For an increased control, strict evaluation can nevertheless be forced.
+
+
+.. later
+ --------------------------
+ Internal Mode of Operation
+ --------------------------
+
+ .. _laziness:
+
+ Laziness
+ ========
+
+ There is no magic: instead of a bottom-up eager evaluation (from all argument leaves to the node function), a lazy one goes top to bottom, driven by the function itself: as a function can only be defined by type constructors (typically list ones),
+
+
+
+
+Arrows
+======
+
+An arrow (a.k.a. "bolt") is a type class representing computations in a pure way; this monad generalisation allows to express the relationships between the logical steps of a processing.
+
+Refer to `this article <https://en.wikipedia.org/wiki/Arrow_(computer_science)>`_ for more information.
+
+
+
+
+.. _`lambda calculus`:
+
+Lambda Calculus
+===============
+
+The lambda calculus is a simple yet powerful theory of functions. Its basis is to consider that all program elements are functions. An expression may include functions that are not yet defined and that are then considered as variables.
+
+This is a formal system designed by Alonzo Church in the 1930s to define the concepts of function and (function) application. It relies on λ-expressions, where λ denotes the binding of a variable. For example, if ``M`` is a λ-expression, then ``λx.M`` is also one, and represents the function that to the ``x`` variable associates ``M`` (i.e. ``\x -> M x`` here).
+
+The λ-calculus has been the first formalism defining and characterising the recursive functions, and as such is essential to the theory of computing.
+
+It is used as theoretical programming language and also as metalanguage for formal proof.
+
+λ-calculus may or may not be typed.
+
+
+Refer to `this article <https://en.wikipedia.org/wiki/Lambda_calculus>`_ for more information.
+
+
+
+
+--------------
+Haskell Syntax
+--------------
+
+Reserved Words
+==============
+
+They cannot be used to name functions or variables::
+
+ case, class, data, deriving, do, else, if, import,
+ in, infix, infixl, infixr, instance, let, of, module,
+ newtype, then, type, where
+
+
+Comments
+========
+
+A single-line comment starts with ``--`` and extends to the end of the line.
+
+Multi-line comments start with ``{-`` and extend to ``-}``.
+
+Example:
+
+.. code:: haskell
+
+ size = 3  -- This is a constant here.
+
+ {- Comments are essential for understanding.
+
+	Consider writing them.
+
+
+  -}
+
+
+Comments can be nested.
+
+See also the comment conventions for the `Haddock documentation generator`_.
+
+.. _`literate Haskell`:
+
+`Literate programming <https://wiki.haskell.org/Literate_programming>`_ (where text is by default a comment, unless being specifically designated as code) is possible in an Haskell script, whose extension shall then be ``.lhs`` (for Literate Haskell).
+
+
+
+
+-------------
+Haskell Tools
+-------------
+
+
+Glasgow Haskell Tools
+=====================
+
+They include a compiler (``GHC``) and an interpreter (``GHCi``).
+
+
+.. _`Haddock documentation generator`:
+
+Haddock: a Haskell Documentation Tool
+=====================================
+
+`Haddock <https://www.haskell.org/haddock/>`_ generates documentation from annotated Haskell source code (typically libraries).
+
+So that they are taken into account by Haddock, comments above function definitions should start with ``{- |``, and those next to parameter types with ``-- ^``.
+
+
+Example of use:
+
+.. code:: haskell
+
+ -- |The 'square' function squares an integer.
+ -- It takes one argument, of type 'Int'. square :: Int -> Int
+ square x = x * x
+
+ {-|
+  The 'cube' function cubes an integer.
+  It takes one argument, of type 'Int'.
+  -}
+ cube x = x * square x
+
+ data T a b
+   = C1 a b  -- ^ This is the documentation for the 'C1' constructor
+   | C2 a b  -- ^ This is the documentation for the 'C2' constructor
+
+
+See `this page <https://haskell-haddock.readthedocs.io/en/latest/markup.html>`_ for more information regarding markup.
+
+
+.. Hackage
+   =======
+
+.. Stack
+   =====
+
+
+-------------------
+Haskell Conventions
+-------------------
+
+
+Index
+=====
+
+They start at zero:
+
+.. code:: haskell
+
+ [1,2,3,4] !! 1 = 2
+
+
+Whitespaces
+===========
+
+One should avoid tabulations (i.e. prefer spaces).
+
+Generally the least number of spaces is preferred; like in: ``sum $ map sqrt [1..10]``.
+
+
+Naming
+======
+
+The names of functions and arguments start with a lowercase character and are followed by any number of: numbers, letters (of any case), underscores and single quotes.
+
+The names of types and constructors start with an uppercase letter.
+
+
+
+Shortness
+=========
+
+Most Haskell developers seem to strongly dislike typing, often resulting in cryptic names for functions (ex: ``fst``) and variable names (often reduced to a single character whose meaning is never disclosed).
+
+A lot of efforts went especially to save keystrokes and more precisely to remove as much as possible the need for parentheses (function application being denoted as a space, the ``.`` and ``$`` operators being introduced, etc.). This allows very compact definitions of functions out of functions (ellipsing values as such), and an increased expressivity, sometimes at the expense of clarity. Extra documentation may alleviate this problem.
+
+Single-letter variable names often denote their type (ex: ``c`` for a ``Char`` variable), and are suffixed by ``s`` to indicate this is a list thereof (ex: ``bs`` for a variable of type ``[Bool]``, ``css`` for  a ``[[Char]]`` one).
+
+
+
+
+Layout & Indentation
+====================
+
+Indentation matters, as spaces denote scopes:
+
+.. code:: haskell
+
+ a = b + c
+  where
+   b = 1
+   c = 2
+
+ d = a * 2
+
+
+An alternative layout based on curly braces and semi-colons exists, yet its use is discouraged.
+
+A function body shall be indented of at least one space compared to the function name (if indented at all).
+
+As any ``where`` or ``let`` use must be, indentation-wise, between the name and the body of a function, we prefer, compared to the function name:
+
+- a 2-space indentation for the body
+- a 1-space indentation for ``where`` / ``let`` body
+
+For example:
+
+.. code:: haskell
+
+ square x =
+   sq
+  where sq = x * x
 
 
 -------------------
@@ -98,24 +980,81 @@ Haskell In Practice
 Installing Haskell
 ==================
 
-On Arch Linux : ``pacman -Sy ghc``.
+On Arch Linux (see `this page <https://wiki.archlinux.org/title/haskell>`_ for more information): ``pacman -Sy ghc cabal-install stack``.
 
 See also our corresponding script `for continuous integration <https://github.com/Olivier-Boudeville/Ceylan-Curry/blob/main/.github/workflows/curry-ci.yml>`_.
+
 
 
 
 Running Haskell
 ===============
 
+Except for performances, programs can be tested directly with ``ghci``, like in::
+
+ $ ghci Foobar.hs
 
 
-Haskell-related Extensions
-==========================
+The very essential `GHCi commands <https://typeclasses.com/ghci/commands>`_ are:
 
-Main extensions are:
+- ``:?`` or ``:help``: lists available commands
+- ``:load FILENAME``: loads specified script
+- ``:reload`` or ``:r``: reloads the current module, file, or project
+- ``:``: repeats the previous command
+- ``:type`` or ``:t``: returns the type of specified expression (value or function); ex: ``:t not False``
+- ``set editor NAME``: sets the code editor to NAME
+- ``edit FILENAME``: edits specified script
+- ``edit``: edits current script
+- ``:quit`` or ``CTRL-D``: quits the interpreter
+
+
+For example:
+
+.. code:: haskell
+
+ $ ghci
+ GHCi, version 8.10.5: https://www.haskell.org/ghc/  :? for help
+
+ Prelude> :type not
+ not :: Bool -> Bool
+
+
+Functions can be directly redefined:
+
+.. code:: haskell
+
+ Prelude> fac n = product [1..n]
+ Prelude> fac 5
+ 120
+
+ Prelude> fac _ = 0
+ Prelude> fac 5
+ 0
+
+
+Haskell-related Filenames
+=========================
+
+
+Filenames
+---------
+
+They may or may not start with a capital letter (and no specified convention applies).
+
+They may be in snake_case or in CamelCase.
+
+Ex: ``my_test.hs``, ``HelloWorld.hs``.
+
+
+
+
+Extensions
+----------
+
+The main extensions are:
 
 - ``.hs``: Haskell source code (to preprocess then compile)
-- ``.lhs``: literate Haskell source (to unlit, preprocess and compile), where all text is comment by default, and code is specifically designated as such
+- ``.lhs``: `literate Haskell`_ source (to unlit, preprocess and compile), where all text is comment by default, and code is specifically designated as such
 - ``.hi``: interface file; contains information about exported symbols
 - ``.hc``: intermediate C files
 
@@ -144,6 +1083,30 @@ In terms of shared libraries, this boils down to, for example::
 	/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2
 
 
+Build System
+============
+
+One may rely on the `Haskell transposition <https://github.com/Olivier-Boudeville/Ceylan-Curry>`_ of our simple, usual make-based build system (refer to the ``GNUmake*`` files; see `this section <https://myriad.esperide.org/#general-build-structure>`_ of our Erlang-based Myriad counterpart for more details).
+
+
+-----------------
+Haskell Resources
+-----------------
+
+To Learn
+========
+
+We would certainly recommend browsing the pleasant `Learn You a Haskell for Great Good! <http://learnyouahaskell.com/>`_ website or, even better, buying their book; another worthwhile book is *Programming in Haskell*, whose author is Graham Hutton, that we found interesting and well-written as well.
+
+Of course the `official Haskell website <https://www.haskell.org/>`_ is also of interest.
+
+
+Cheat Sheets
+============
+
+See `Justin Bailey's one <https://cheatsheet.codeslower.com/>`_.
+
+
 
 -------
 Support
@@ -152,6 +1115,7 @@ Support
 Bugs, questions, remarks, patches, requests for enhancements, etc. are to be reported to the `project interface <https://github.com/Olivier-Boudeville/Ceylan-Curry>`_ (typically `issues <https://github.com/Olivier-Boudeville/Ceylan-Curry/issues>`_) or directly at the email address mentioned at the beginning of this cookbook.
 
 
+.. _contact:
 
 -------------
 Please React!
