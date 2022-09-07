@@ -24,7 +24,7 @@ Ceylan-Curry, a Haskell Cookbook
 
 
 :raw-html:`<center><img src="curry-title.png" id="responsive-image-small"></img>`
-:raw-latex:`\centering \includegraphics[scale=0.70]{curry-title.png}`
+:raw-latex:`\begin{center} \includegraphics[scale=0.70]{curry-title.png} \end{center}`
 
 
 
@@ -249,6 +249,26 @@ Composition: the "." operator
 _____________________________
 
 
+The ``.`` operator applies to functions, and returns the composition of two functions as a single one: ``(f . g) x = f (g x)``.
+
+.. code:: haskell
+
+ (.) :: (b -> c) -> (a -> b) -> (a -> c)
+ f . g = \x -> f (g x)
+
+Composition is associative_: ``f . (g . h) = (f . g) . h``.
+
+Compositions allow to think in terms of functions and abstract out values.
+
+
+An example to express the composition of a list of functions:
+
+.. code:: haskell
+
+ compose :: [a -> a] -> (a -> a)
+ compose = foldr (.) id
+
+
 
 Non-Binding Function Application: the "$" operator
 __________________________________________________
@@ -342,6 +362,27 @@ Note that a non-empty list is (a bit surprisingly) to be pattern-matched with ``
 The same name cannot be specified for two arguments to match when they are equal; a guard must be used for that. Finally pattern matching can operate on few possible patterns: function application, tuple and list ones, that's it.
 
 
+Guards
+======
+
+Functions can be defined using guarded equations, to select which clause applies based on the first one from the top to evaluate to ``True``. As Haskell can guarantee that these functions are pure, guards can be user-defined (rather than be taken in a limited selection of built-in guards).
+
+For example:
+
+.. code:: haskell
+
+ abs | n >= 0    = n
+	 | otherwise = -n
+
+Guards are also logical expressions to filter the values produced by earlier generators.
+
+For example:
+
+.. code:: haskell
+
+ primes :: Int -> [Int]
+ primes n = [ x | x <- [2..n], prime x]
+
 
 Currying
 ========
@@ -424,6 +465,84 @@ Haskell infers types at compilation (static typing), which prevents to discover 
 .. [#] Of course other problems may occur; for example ``1 `div` 0`` is well-typed yet its execution will fail.
 
 Some expressions that could be successfully evaluated can nevertheless be rejected on type grounds (ex: ``if True then 1 else False``), but in practice it is hardly a problem.
+
+
+Type Alias
+----------
+
+Ex: ``type Pos = (Int,Int)``
+
+This does not introduce a new type; these are synonyms for Haskell.
+
+Type declarations can have any number of parameters and be parametrised by other types, like in ``type Assoc k v = [(k,v)]``.
+
+
+Data Declarations
+-----------------
+
+This introduces a new type; ex: ``data Bool = False | True``.
+
+``|`` shall be read "or", and the values specified for the new type are called *constructors*. They start with an uppercase letter and a given constructor may not be used in more than one type.
+
+Constructors may have arguments, in which case they are *constructor functions*:
+
+.. code:: haskell
+
+ data Shape = Circle Float | Rect Float Float
+
+Here ``Circle :: Float -> Shape``.
+
+Such functions have no definition equations, and ``Circle 1.0`` is fully evaluated and cannot be further simplified.
+
+The ordering on the constructors of a type is determined by their position in its declaration (ex: ``False < True``; constructors with arguments are ordered lexicographically regarding these argments.
+
+They may also be:
+
+- parametrised: ``data Maybe a = Nothing | Just a``.
+- recursively defined: ``data Nat = Zero | Succ Nat``
+
+
+For example all sorts of trees can be defined with it:
+
+- binary tree with content only in leaves:
+
+.. code:: haskell
+
+ data Tree a = Leaf a | Node (Tree a) (Tree a)
+
+- binary tree with content only in non-leaf nodes:
+
+.. code:: haskell
+
+ data Tree a = Leaf | Node (Tree a) a (Tree a)
+
+- binary tree with different types of content in leaf and non-leaf nodes:
+
+.. code:: haskell
+
+ data Tree a b = Leaf a | Node (Tree a b) b (Tree a b)
+
+- tree having any number of subtrees:
+
+.. code:: haskell
+
+ data Tree a = Leaf a | Node a [Tree a]
+
+
+
+Newtype Declarations
+--------------------
+
+Introduces a new type provided that it has a single constructor with a single argument.
+
+Ex: ``newtype Nat = N Int``.
+
+By comparison:
+
+- ``type Nat = Int`` would not introduce a new type
+- ``data Nat = N Int`` would also introduce a new type, but would incur runtime overhead
+
+Why ``data`` is not automatically transformed by Haskell internally in ``newtype`` whenever applicable is unsure (for us).
 
 
 Algebraic Datatypes
@@ -585,8 +704,11 @@ Class constraints can be specified when typing a function. For example:
 
  (+) :: Num a => a -> a -> a
 
+The type variable ``a`` must be here an *instance* of class ``Num``.
+
 A type respecting at least one of such constraints is said *overloaded*, as is the corresponding expression.
 
+Well-known classes are: ``Eq``, ``Ord``, ``Show``, ``Read``, ``Num``, ``Integral``, ``Fractional``.
 
 
 Monad
@@ -619,6 +741,11 @@ A monad M is a ``(type, return function, bind function)`` triplet with:
 .. [#] A monadic function is a function returning a monadic value.
 
 
+So ``return`` allows to convert a pure expression (not involving `side-effects`_) of type ``t`` into an action (i.e. a transformation that may be executed) ``M t`` that is impure (with side effects) and deals with a value of type ``t``. No opposite operation exists (that would transform a value of type ``type M t`` into one of type ``t``, in the sense that side-effects cannot be rolled-back. A goal is thus to separate the pure parts of a program from its impure ones, which shall be minimised and isolated.
+
+
+
+
 ``Mt >>= f`` (i.e. "bind Mt f") allows to apply the f function to the value of type t encapsulated in ``Mt``; ``>>=`` drives the chaining of monadic functions (as such it handles functions, not values).
 
 By composing ``>>=`` with ``return``, any function ``g :: t -> t`` can be applied to a monad of type ``M t`` (here the types ``u`` and ``t`` in the definition of bind are the same).
@@ -638,8 +765,28 @@ The elements of the monadic triplet shall respect following 3 axioms, ``return``
 - associativity of bind, with: ``(m >>= f) >>= g  ≡  m >>= \x . (f x >>= g)``
 
 
-Refer to `this article <https://en.wikipedia.org/wiki/Monad_(functional_programming)>`_ for more information.
 
+
+A sequence of actions (transformations that may be executed) may be combined into a single composite action thanks to the ``do`` notation.
+
+
+Let's consider types ``Vk`` for k in ``1..n`` and ``R``, and a function ``f`` of arity ``n`` and type ``V1 -> V2 -> ... -> Vn -> R``.
+
+.. code:: haskell
+
+ do v1 <- a1
+	v2 <- a2
+	...
+	vn <- an
+	return (f v1 v2 ... vn)
+
+
+The ``<-`` operator in ``v1 <- a1``, for ``v1`` a value of type ``V1``, means that the action (transformation function) ``a1`` of type ``M V1`` (i.e., if ``M`` is ``IO``, of type ``WorldState -> (V1,WorldState)``) shall be *executed*, and that its result (of type ``V1``) shall be stored in variable ``v1``. Then the (pure) function ``f`` can be evaluated with these resulting ``vk`` arguments, and its returned value of type R is returned as an action of type ``M R`` (ex: ``IO Int``).
+
+As a consequence, the ``do`` notation returns a new action, i.e. a single composite transformation that may be executed.
+
+
+Refer to `this article <https://en.wikipedia.org/wiki/Monad_(functional_programming)>`_ for more information.
 
 
 In a Nutshell
@@ -695,8 +842,6 @@ A third example is ``seqn``, to transform a list of actions with side-effects (e
  seqn (act:acts) = do x <- act    -- *performs* this 'act' action
 						   xn <- seqn acts
 						   return (x:xs)
-
-
 
 
 
@@ -798,10 +943,23 @@ Refer to `this article <https://en.wikipedia.org/wiki/Lambda_calculus>`_ for mor
 
 
 
+Minor Topics
+============
+
+- **enumerations**: ranges whose bounds (if any) are specified; any value in the ``Enum`` class can be used; ex: ``[1..10]``, ``[1,3..100]``, ``['a' .. 'z']``, ``[100..]``
+
+- **operator sections**: if ``#`` is an operator, ``(#)``, ``(x #)``, ``(# y)`` are sections; for example ``(/3)  ≡  \x -> x/3``; usage: ``sum = foldl (+) 0``
+
+- **higher-order functions**: such a function takes a function as an argument and/or returns a function as a result; the support for currying_ in Haskell systematises the latter, so in this context a higher function is the latter, i.e a function with at least one argument being a function
+
+- the ``IO`` monad accounts for the (input-output) side effects triggered by a program, which translate to changes done to the state of the world (outside of the program itself); such an effectful program, which is to return a value of type ``a`` can be represented by a ``WorldState -> (a,WorldState)`` function; this corresponds to the definition of the ``IO a`` type, whose values are called *actions* (i.e. transformations that may be executed)
+- the ``main`` function of a script is evaluated when this script is executed; ``main :: IO ()`` returns the empty tuple, to be understood as a dummy result value; thanks to currying, no specific support for input program parameter is needed for the ``IO`` monad; for example an interactive program taking a character and returning an integer could have for type ``Char -> IO Int``, meaning ``Char -> WorldState -> (Int,WorldState)``
+
 
 --------------
 Haskell Syntax
 --------------
+
 
 Reserved Words
 ==============
@@ -970,6 +1128,13 @@ For example:
  square x =
    sq
   where sq = x * x
+
+
+-------------
+Haskell Hints
+-------------
+
+- generalise: types can be generalised thanks to type classes
 
 
 -------------------
