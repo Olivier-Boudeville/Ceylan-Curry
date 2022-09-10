@@ -94,7 +94,7 @@ endif
 # The uniquely-defined version of this layer, for all uses (including rebar and
 # hex):
 #
-CURRY_VERSION := 0.0.1
+CURRY_VERSION := 0.0.2
 
 
 # PROJECT_VERSION should be defined on a per-project basis.
@@ -183,7 +183,7 @@ HASKELL_INTERPRETER := $$(which ghci 2>/dev/null)
 
 HASKELL_COMPILER := $$(which ghc 2>/dev/null)
 
-HASKELL_COMPILER_OPT := -dynamic
+HASKELL_COMPILER_OPT := -O2 -dynamic
 
 
 
